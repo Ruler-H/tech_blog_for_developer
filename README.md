@@ -72,7 +72,7 @@
 ### 3-2. 프로젝트 URL 구조
 |URL 경로  |views 함수 이름  |html 파일이름   |비고 |
 |:-------:|:--------------:|:------------:|:---:|
-|'blog/'  |postlist        |post_list.html|     |
+|'accounts/'|postlist      |post_list.html|     |
 #### [추후 수정 필요]  
 
 ### 3-3. 개발 일정
