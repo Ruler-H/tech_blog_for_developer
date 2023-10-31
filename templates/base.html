@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <title>Tech_Blog</title>
+    
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/favicon-32x32.png' %}">
     <link href="{% static 'assets/css/loader.css' %}" rel="stylesheet" type="text/css" />
     <script src="{% static 'assets/js/loader.js' %}"></script>
@@ -107,6 +108,8 @@
 
             </ul>
             
+            
+            {% if user.is_authenticated %}
             <ul class="navbar-item flex-row ml-auto">
                 <li class="nav-item align-self-center search-animated">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search toggle-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -117,7 +120,6 @@
                     </form>
                 </li>
             </ul>
-
             <ul class="navbar-item flex-row nav-dropdowns">
 
                 <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
@@ -155,6 +157,13 @@
 
                 </li>
             </ul>
+            {% else %}
+            <ul class="d-flex justify-content-end align-items-center w-100">
+                
+                    <a class="btn btn-primary mt-2" href="{% url 'accounts:login' %}">로그인</a>
+                
+            </ul>
+            {% endif %}
             {% endblock %}
             
             

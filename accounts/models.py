@@ -1,6 +1,6 @@
 from django.db import models
 
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,UserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 
 class CustomUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_fields):
@@ -25,15 +25,15 @@ class CustomUserManager(UserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        return self._create_user(username, email, password, **extra_fields)
+        return super()._create_user(username, email, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(max_length=100, unique=True, null=False)
     nickname = models.CharField(max_length=50, unique=True, null=False)
-    phone = models.CharField(max_length=50, unique=True, null=True)
-    development_field = models.CharField(max_length=50, unique=True, null=False)
+    phone = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    development_field = models.CharField(max_length=50, null=False)
     profile_image = models.ImageField(upload_to='accounts/%Y/%m/%d/', blank=True, null=True)
     joined_date = models.DateTimeField(auto_now_add=True, null=False)
 
