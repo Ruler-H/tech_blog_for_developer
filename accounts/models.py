@@ -54,6 +54,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.nickname
     
+    def get_absolute_url(self):
+        return f'/accounts/profile/{self.pk}/'
+    
     class Meta:
         verbose_name = '사용자'
         verbose_name_plural = '사용자'

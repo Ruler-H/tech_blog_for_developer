@@ -1,13 +1,15 @@
 from typing import Any
+from django.views import View
+from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
-from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
-from django.views import View
+from django.http import HttpRequest, HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
-from django.db.models import Q
 
-from .models import Post, Image, Category
+from .models import Post, Image, Category, Comment, Recomment
+import re
 
 class SubscribeView(View):
 
@@ -20,6 +22,7 @@ class PostListView(ListView):
     ordering = '-updated_at'
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        print('get_context_data')
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
         categories = Category.objects.all().filter(user=current_user)
@@ -30,6 +33,7 @@ class PostListView(ListView):
         querySet = super().get_queryset()
         current_user = self.request.user
         querySet = querySet.filter(author = current_user)
+        print('get_queryset')
         search_keyword = self.request.GET.get('q')
         category = self.request.GET.get('category')
         if category == 'All':
@@ -46,13 +50,29 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        pk = self.kwargs["pk"]
+        post = Post.objects.get(pk=pk)
+        if not post:
+            return render(request, 'blog/post_not_found.html')
+        post.view_count += 1
+        post.save()
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(PostDetailView, self).get_context_data(**kwargs)
         images = Image.objects.all().filter(post=context['post'])
         context['images'] = images
+        comment_list = []
+        for comment in Comment.objects.filter(post=context['post']):
+            recomment = Recomment.objects.filter(comment=comment)
+            comment_list.append([comment, recomment])
+        context['comment_list']= comment_list
         return context
-class PostWriteView(CreateView):
     
+
+class PostWriteView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login/'
     model = Post
     fields = ['title', 'content', 'upload_file', 'category']
 
@@ -70,6 +90,7 @@ class PostWriteView(CreateView):
         current_user = self.request.user
         title = request.POST.get('title')
         content = request.POST.get('post-content')
+        extract_image(content)
         upload_file = request.POST.get('upload_file')
         category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
         write_post = Post.objects.create(title=title, content=content, upload_file=upload_file, category=category, author=current_user)
@@ -78,7 +99,8 @@ class PostWriteView(CreateView):
         return redirect(write_post.get_absolute_url())
     
 
-class PostEditView(UpdateView):
+class PostEditView(LoginRequiredMixin, UpdateView):
+    login_url = '/accounts/login/'
     model = Post
     fields = ['title',  'content', 'upload_file', 'category']
 
@@ -91,9 +113,18 @@ class PostEditView(UpdateView):
         context['post'] = post
         return context
     
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        current_user = self.request.user
+        post = Post.objects.get(pk = self.kwargs["pk"])
+        if post.author != current_user:
+            return redirect('/')
+        return super().get(request, *args, **kwargs)
+    
     def post(self, request, *args, **kwargs):
         current_user = self.request.user
         oldPost = Post.objects.get(pk = self.kwargs["pk"])
+        if oldPost.author != current_user:
+            return redirect('/')
         category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
         title = request.POST.get('title')
         content = request.POST.get('post-content')
@@ -108,11 +139,16 @@ class PostEditView(UpdateView):
         return redirect(oldPost.get_absolute_url())
     
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/accounts/login/'
     model = Post
     success_url = '/blog'
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        current_user = self.request.user
+        post = Post.objects.get(pk = self.kwargs["pk"])
+        if post.author != current_user:
+            return redirect('/')
         return super().post(request, *args, **kwargs)
 
 
@@ -122,3 +158,10 @@ postdetail = PostDetailView.as_view()
 postedit = PostEditView.as_view()
 postwrite = PostWriteView.as_view()
 postdelete = PostDeleteView.as_view()
+
+def extract_image(content):
+    image_list = re.findall('<img src=".+">', content)
+    for image in image_list:
+        print(image)
+        image_name = image.split('src=')[-1][:-1]
+        print(image_name)
