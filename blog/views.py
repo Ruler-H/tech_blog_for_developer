@@ -22,7 +22,7 @@ class PostListView(ListView):
     model = Post
     ordering = '-updated_at'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
         categories = Category.objects.all().filter(user=current_user)
