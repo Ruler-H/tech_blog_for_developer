@@ -23,7 +23,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/forms/switches.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/elements/alert.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/editors/quill/quill.snow.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/forms/theme-checkbox-radio.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/dropify/dropify.min.css' %}">
     <link href="{% static 'assets/css/components/cards/card.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/apps/mailbox.css' %}" rel="stylesheet" type="text/css" />
@@ -39,6 +38,8 @@
     <link href="{% static 'assets/css/dashboard/dash_1.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/users/user-profile.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/users/account-setting.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/apps/mailing-chat.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/apps/todolist.css' %}" rel="stylesheet" type="text/css" />
     
     <style class="dark-theme">
         #chart-2 path {
@@ -75,7 +76,7 @@
                         <ul class="list-unstyled menu-categories" id="topAccordion">
 
                             <li class="menu single-menu">
-                                <a href="{% url 'postlist' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
+                                <a href="{% url 'blog:postlist' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
                                     <div class="">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                                         
@@ -236,13 +237,15 @@
     <script src="{% static 'plugins/notification/snackbar/snackbar.min.js' %}"></script>
     <script src="{% static 'plugins/highlight/highlight.pack.js' %}"></script>
     <script src="{% static 'plugins/dropify/dropify.min.js' %}"></script>
+    <script src="{% static 'plugins/file-upload/file-upload-with-preview.min.js' %}"></script>3
     <script src="{% static 'assets/js/custom.js' %}"></script>
     <script src="{% static 'assets/js/dashboard/dash_1.js' %}"></script>
     <script src="{% static 'assets/js/ie11fix/fn.fix-padStart.js' %}"></script>
     <script src="{% static 'assets/js/apps/custom-mailbox.js' %}"></script>
     <script src="{% static 'assets/js/scrollspyNav.js' %}"></script>
     <script src="{% static 'assets/js/users/account-settings.js' %}"></script>
-    <script src="{% static 'plugins/file-upload/file-upload-with-preview.min.js' %}"></script>
+    <script src="{% static 'assets/js/apps/mailbox-chat.js' %}"></script>
+    <script src="{% static 'assets/js/apps/todoList.js' %}"></script>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     {% block script %}
     {% endblock %}

@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
 from .models import Post, Image, Category, Comment, Recomment
+from .forms import CommentAddForm, RecommentAddForm
 import re
 
 class SubscribeView(View):
@@ -22,7 +23,6 @@ class PostListView(ListView):
     ordering = '-updated_at'
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        print('get_context_data')
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
         categories = Category.objects.all().filter(user=current_user)
@@ -33,7 +33,6 @@ class PostListView(ListView):
         querySet = super().get_queryset()
         current_user = self.request.user
         querySet = querySet.filter(author = current_user)
-        print('get_queryset')
         search_keyword = self.request.GET.get('q')
         category = self.request.GET.get('category')
         if category == 'All':
@@ -65,8 +64,11 @@ class PostDetailView(DetailView):
         context['images'] = images
         comment_list = []
         for comment in Comment.objects.filter(post=context['post']):
-            recomment = Recomment.objects.filter(comment=comment)
-            comment_list.append([comment, recomment])
+            recomments = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment': comment,
+                'recomments': recomments,
+            })
         context['comment_list']= comment_list
         return context
     
@@ -150,7 +152,113 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         if post.author != current_user:
             return redirect('/')
         return super().post(request, *args, **kwargs)
+    
 
+class CommentAddView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login'
+    model = Comment
+    form_class = CommentAddForm
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        post = Post.objects.get(pk=self.kwargs.get('post_pk'))
+        form = CommentAddForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            comment = form.save(commit=False)
+            comment.author = user
+            comment.post = post
+            comment.save()
+        else:
+            comment_list = []
+            for comment in Comment.objects.filter(post=post):
+                recomments = Recomment.objects.filter(comment=comment)
+                comment_list.append({
+                    'comment': comment,
+                    'recomments': recomments,
+            })
+            context = {
+                'notice': '댓글이 입력되지 않았습니다.',
+                'post': post,
+                'comment_list': comment_list,
+            }
+            return render(request, 'blog/post_detail.html', context)
+        return redirect(comment.post.get_absolute_url())
+    
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/accounts/login'
+    
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        comment_pk = kwargs.get('comment_pk')
+        del_comment = Comment.objects.get(pk = comment_pk)
+        del_comment.delete()
+        post = Post.objects.get(pk=request.POST.get('post_pk'))
+        comment_list = []
+        for comment in Comment.objects.filter(post=post):
+            recomments = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment': comment,
+                'recomments': recomments,
+        })
+        context = {
+            'post': post,
+            'comment_list': comment_list,
+        }
+        return render(request, 'blog/post_detail.html', context)
+    
+
+class RecommentAddView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login'
+    model = Recomment
+    form_class = RecommentAddForm
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        post = Post.objects.get(pk=request.POST.get('post_pk'))
+        form = RecommentAddForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            comment = Comment.objects.get(pk=request.POST.get('comment_pk'))
+            recomment = form.save(commit=False)
+            recomment.author = user
+            recomment.comment = comment
+            recomment.save()
+        else:
+            comment_list = []
+            for comment in Comment.objects.filter(post=post):
+                recomments = Recomment.objects.filter(comment=comment)
+                comment_list.append({
+                    'comment': comment,
+                    'recomments': recomments,
+            })
+            context = {
+                're_notice': '답글이 입력되지 않았습니다.',
+                'post': post,
+                'comment_list': comment_list,
+            }
+            return render(request, 'blog/post_detail.html', context)
+        return redirect(comment.post.get_absolute_url())
+    
+
+class RecommentDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/accounts/login'
+    model = Recomment
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        recomment_pk = kwargs.get('recomment_pk')
+        del_recomment = Recomment.objects.get(pk = recomment_pk)
+        del_recomment.delete()
+        post = Post.objects.get(pk=request.POST.get('post_pk'))
+        comment_list = []
+        for comment in Comment.objects.filter(post=post):
+            recomments = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment': comment,
+                'recomments': recomments,
+        })
+        context = {
+            'post': post,
+            'comment_list': comment_list,
+        }
+        return render(request, 'blog/post_detail.html', context)
 
 subscribe = SubscribeView.as_view()
 postlist = PostListView.as_view()
@@ -158,6 +266,10 @@ postdetail = PostDetailView.as_view()
 postedit = PostEditView.as_view()
 postwrite = PostWriteView.as_view()
 postdelete = PostDeleteView.as_view()
+comment_add = CommentAddView.as_view()
+comment_delete = CommentDeleteView.as_view()
+recomment_add = RecommentAddView.as_view()
+recomment_delete = RecommentDeleteView.as_view()
 
 def extract_image(content):
     image_list = re.findall('<img src=".+">', content)
