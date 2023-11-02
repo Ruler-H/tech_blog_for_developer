@@ -1,9 +1,10 @@
 from typing import Any
 from django.views import View
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.shortcuts import render, redirect
 from django.forms.models import BaseModelForm
 from django.http import HttpRequest, HttpResponse
+from django.db.models import Q
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,12 +13,13 @@ from django.contrib.auth.hashers import check_password
 import re
 
 from .models import User
+from .forms import SubscribeForm
 
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
     next_page = ''
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         print(request.POST)
         return super(CustomLoginView, self).post(request, *args, **kwargs)
 
@@ -26,7 +28,7 @@ class SignUpView(CreateView):
     template_name = 'accounts/signup.html'
     fields = ['username', 'nickname', 'email', 'password', 'development_field', 'phone']
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         username = request.POST.get('username')
         context = {}
         if not username:
@@ -77,7 +79,7 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     
     success_url = '/accounts/profile/'
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         context = {}
         nickname = request.POST.get('nickname')
         if not nickname:
@@ -121,6 +123,25 @@ class PasswordChangeView(View):
         user.save()
         auth.logout(request)
         return redirect('/accounts/login')
+    
+
+class SubscribeView(LoginRequiredMixin, ListView):
+    model = User
+    form_class = SubscribeForm
+
+
+class SubscribeDeleteView(LoginRequiredMixin, DeleteView):
+    model = User
+    form_class = SubscribeForm
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        sub_pk = kwargs.get("subscription_pk")
+        user = request.user
+        subscription = user.subscriptions.get(pk=sub_pk)
+        user.subscriptions.remove(subscription)
+        user.save()
+        return redirect('/accounts/subscribe/')
+
 
 
 def passwordValidator(password1, password2):
@@ -141,3 +162,5 @@ logout = CustomLogoutView.as_view()
 profile = ProfileView.as_view()
 profile_edit = ProfileEditView.as_view()
 password_change = PasswordChangeView.as_view()
+subscribe = SubscribeView.as_view()
+subscribe_delete = SubscribeDeleteView.as_view()

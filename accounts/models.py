@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     development_field = models.CharField(max_length=50, null=False)
     profile_image = models.ImageField(upload_to='accounts/%Y/%m/%d/', blank=True, null=True)
     joined_date = models.DateTimeField(auto_now_add=True, null=False)
+    subscriptions = models.ManyToManyField('User', blank=True)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

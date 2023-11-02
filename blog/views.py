@@ -9,16 +9,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
 from .models import Post, Image, Category, Comment, Recomment
+from accounts.models import User
 from .forms import CommentAddForm, RecommentAddForm
 import re
 
-class SubscribeView(View):
 
-    def get(self, request):
-        return render(request, 'blog/subscribe.html')
-    
-
-class PostListView(ListView):
+class PostListView(LoginRequiredMixin, ListView):
     model = Post
     ordering = '-updated_at'
 
@@ -260,7 +256,31 @@ class RecommentDeleteView(LoginRequiredMixin, DeleteView):
         }
         return render(request, 'blog/post_detail.html', context)
 
-subscribe = SubscribeView.as_view()
+
+class OtherPostListView(ListView):
+    model = Post
+    ordering = '-updated_at'
+
+    def get_queryset(self):
+        querySet = super().get_queryset()
+        other_pk = self.kwargs['other_pk']
+        print(other_pk)
+        other_user = User.objects.get(pk=other_pk)
+        
+        querySet = querySet.filter(author = other_user)
+        search_keyword = self.request.GET.get('q')
+        category = self.request.GET.get('category')
+        if category == 'All':
+            category = ''
+        if search_keyword or category:
+            querySet = querySet.filter(
+                Q(title__icontains=search_keyword) | 
+                Q(content__icontains=search_keyword) &
+                Q(category__category__icontains=category)).distinct()
+            
+        return querySet
+
+
 postlist = PostListView.as_view()
 postdetail = PostDetailView.as_view()
 postedit = PostEditView.as_view()
@@ -270,6 +290,7 @@ comment_add = CommentAddView.as_view()
 comment_delete = CommentDeleteView.as_view()
 recomment_add = RecommentAddView.as_view()
 recomment_delete = RecommentDeleteView.as_view()
+other_postlist = OtherPostListView.as_view()
 
 def extract_image(content):
     image_list = re.findall('<img src=".+">', content)

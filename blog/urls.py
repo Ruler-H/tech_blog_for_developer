@@ -14,5 +14,5 @@ urlpatterns = [
     path('comment_delete/<int:comment_pk>/', views.comment_delete, name='comment_delete'),
     path('recomment_add/', views.recomment_add, name='recomment_add'),
     path('recomment_delete/<int:recomment_pk>/', views.recomment_delete, name='recomment_delete'),
-    path('subscribe/', views.subscribe, name='subscribe'),
+    path('other/<int:other_pk>/', views.other_postlist, name='other_postlist'),
 ]

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-header">
+    <nav class="breadcrumb-one" aria-label="breadcrumb">
+        <div class="title">
+            <h3>Dev Sqaure</h3>
+        </div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">List</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row" id="cancel-row">
+                
+    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <table id="invoice-list" class="table table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Title</th>
+                        <th>Create Date</th>
+                        <th>Update Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="d-flex">
+                                <div class="usr-img-frame mr-2 rounded-circle">
+                                    <img alt="avatar" class="img-fluid rounded-circle" src="assets/img/90x90.jpg">
+                                </div>
+                                <p class="align-self-center mb-0 user-name"> {{board_post.author.username}} </p>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="inv-email">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> {{board_post.author.email}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="inv-date">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> {{board_post.title}}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="inv-amount">{{board_post.created_at}}</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-success inv-status">{{board_post.updated_at}}</span>
+                        </td>
+                        
+                    </tr>
+
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    sorting_asc = document.querySelector(".sorting_asc");
+    sorting_asc.className = "";
+    sorting_th = document.querySelector(".sorting");
+    sorting_th.className = "";
+    sorting_th = document.querySelector(".sorting");
+    sorting_th.className = "";
+</script>
+{% endblock %}

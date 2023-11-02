@@ -24,6 +24,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/elements/alert.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/editors/quill/quill.snow.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'plugins/dropify/dropify.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/table/datatable/datatables.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/table/datatable/dt-global_style.css' %}">
     <link href="{% static 'assets/css/components/cards/card.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/apps/mailbox.css' %}" rel="stylesheet" type="text/css" />
     <script src="{% static 'plugins/sweetalerts/promise-polyfill.js' %}"></script>
@@ -31,6 +33,7 @@
     <link href="{% static 'plugins/sweetalerts/sweetalert.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'plugins/notification/snackbar/snackbar.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'plugins/file-upload/file-upload-with-preview.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
     <!--  END CUSTOM STYLE FILE  -->    
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
@@ -40,7 +43,12 @@
     <link href="{% static 'assets/css/users/account-setting.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/apps/mailing-chat.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'assets/css/apps/todolist.css' %}" rel="stylesheet" type="text/css" />
-    
+    <link href="{% static 'assets/css/apps/contacts.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/apps/invoice-list.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'plugins/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!--  BEGIN CUSTOM STYLE FILE  -->
     <style class="dark-theme">
         #chart-2 path {
             stroke: #0e1726;
@@ -75,8 +83,8 @@
 
                         <ul class="list-unstyled menu-categories" id="topAccordion">
 
-                            <li class="menu single-menu">
-                                <a href="{% url 'blog:postlist' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
+                            <li class="menu single-menu" id="blog_menu">
+                                <a href="{% url 'blog:postlist' %}" aria-expanded="false" class="dropdown-toggle autodroprown" id="blog_menu_a">
                                     <div class="">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                                         
@@ -87,7 +95,7 @@
                             </li>
 
                             <li class="menu single-menu">
-                                <a href="#app" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <a href="{% url 'accounts:subscribe' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
                                     <div class="">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-coffee">
                                         <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
@@ -103,7 +111,7 @@
                             </li>
                             
                             <li class="menu single-menu">
-                                <a href="#components" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                <a href="{% url 'board:boardlist' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
                                     <div class="">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                                         
@@ -197,10 +205,10 @@
 
                 <div class="footer-wrapper">
                     <div class="footer-section f-section-1">
-                        <p class="">Copyright © 2021 <a target="_blank" href="https://designreset.com">DesignReset</a>, All rights reserved.</p>
+                        <p class="">Copyright © 2023</p>
                     </div>
                     <div class="footer-section f-section-2">
-                        <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
+                        <p class="">Hwang Byeong Heon <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
                     </div>
                 </div>
 
@@ -237,7 +245,10 @@
     <script src="{% static 'plugins/notification/snackbar/snackbar.min.js' %}"></script>
     <script src="{% static 'plugins/highlight/highlight.pack.js' %}"></script>
     <script src="{% static 'plugins/dropify/dropify.min.js' %}"></script>
-    <script src="{% static 'plugins/file-upload/file-upload-with-preview.min.js' %}"></script>3
+    <script src="{% static 'plugins/file-upload/file-upload-with-preview.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'plugins/table/datatable/datatables.js' %}"></script>
+    <script src="{% static 'plugins/table/datatable/button-ext/dataTables.buttons.min.js' %}"></script>
     <script src="{% static 'assets/js/custom.js' %}"></script>
     <script src="{% static 'assets/js/dashboard/dash_1.js' %}"></script>
     <script src="{% static 'assets/js/ie11fix/fn.fix-padStart.js' %}"></script>
@@ -246,6 +257,9 @@
     <script src="{% static 'assets/js/users/account-settings.js' %}"></script>
     <script src="{% static 'assets/js/apps/mailbox-chat.js' %}"></script>
     <script src="{% static 'assets/js/apps/todoList.js' %}"></script>
+    <script src="{% static 'assets/js/apps/contact.js' %}"></script>
+    <script src="{% static 'assets/js/apps/invoice-list.js' %}"></script>
+</body>
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     {% block script %}
     {% endblock %}
