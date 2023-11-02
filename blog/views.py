@@ -49,7 +49,7 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    def get(self, request, *args, **kwargs):
         pk = self.kwargs["pk"]
         post = Post.objects.get(pk=pk)
         if not post:
@@ -58,7 +58,7 @@ class PostDetailView(DetailView):
         post.save()
         return super().get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         images = Image.objects.all().filter(post=context['post'])
         context['images'] = images
@@ -115,7 +115,7 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         context['post'] = post
         return context
     
-    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def get(self, request: HttpRequest, *args, **kwargs):
         current_user = self.request.user
         post = Post.objects.get(pk = self.kwargs["pk"])
         if post.author != current_user:
@@ -146,7 +146,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = '/blog'
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         current_user = self.request.user
         post = Post.objects.get(pk = self.kwargs["pk"])
         if post.author != current_user:
@@ -159,7 +159,7 @@ class CommentAddView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentAddForm
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         post = Post.objects.get(pk=self.kwargs.get('post_pk'))
         form = CommentAddForm(request.POST)
         if form.is_valid():
@@ -187,7 +187,7 @@ class CommentAddView(LoginRequiredMixin, CreateView):
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/accounts/login'
     
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         comment_pk = kwargs.get('comment_pk')
         del_comment = Comment.objects.get(pk = comment_pk)
         del_comment.delete()
@@ -211,7 +211,7 @@ class RecommentAddView(LoginRequiredMixin, CreateView):
     model = Recomment
     form_class = RecommentAddForm
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         post = Post.objects.get(pk=request.POST.get('post_pk'))
         form = RecommentAddForm(request.POST)
         if form.is_valid():
@@ -242,7 +242,7 @@ class RecommentDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/accounts/login'
     model = Recomment
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args, **kwargs):
         recomment_pk = kwargs.get('recomment_pk')
         del_recomment = Recomment.objects.get(pk = recomment_pk)
         del_recomment.delete()
