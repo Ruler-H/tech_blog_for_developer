@@ -4,74 +4,91 @@
 <div class="page-header">
     <nav class="breadcrumb-one" aria-label="breadcrumb">
         <div class="title">
-            <h3>Dev Sqaure</h3>
+            <h3>Dev Square</h3>
         </div>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">List</li>
+            <li class="breadcrumb-item"><a href="javascript:void(0);">List</a></li>
         </ol>
     </nav>
 </div>
 
-<div class="row" id="cancel-row">
-                
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <table id="invoice-list" class="table table-hover" style="width:100%">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Title</th>
-                        <th>Create Date</th>
-                        <th>Update Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <div class="d-flex">
-                                <div class="usr-img-frame mr-2 rounded-circle">
-                                    <img alt="avatar" class="img-fluid rounded-circle" src="assets/img/90x90.jpg">
-                                </div>
-                                <p class="align-self-center mb-0 user-name"> {{board_post.author.username}} </p>
+<div class="row layout-top-spacing">
+    <div class="col-xl-12 col-lg-12 col-md-12">
+
+        <div class="row">
+
+            <div class="col-xl-12  col-md-12">
+
+                <div class="mail-box-container">
+                    <div class="mail-overlay"></div>
+                    <div class="tab-title">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-12 text-center mail-btn-container">
+                                <a id="btn-compose-mail" class="btn btn-block" href="{% url 'blog:postwrite' %}"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></a>
                             </div>
-                        </td>
-                        <td>
-                            <span class="inv-email">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> {{board_post.author.email}}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="inv-date">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> {{board_post.title}}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="inv-amount">{{board_post.created_at}}</span>
-                        </td>
-                        <td>
-                            <span class="badge badge-success inv-status">{{board_post.updated_at}}</span>
-                        </td>
+                        </div>
+                    </div>
+
+                    <div id="mailbox-inbox" class="accordion mailbox-inbox">
+
+                        <form class="search" action="/blog/search/" method="get">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu mail-menu d-lg-none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                            <input type="text" class="form-control input-search" placeholder="Search Here..." name="keyword">
+                            <select class="m-0 border-0" id="" placeholder="카테고리를 선택하세요." name="category">
+                                <option value="All">All</option>
+                                {% for category in categories %}
+                                <option value="{{ category }}">{{ category }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
                         
-                    </tr>
-
+                        <!-- My Blog 게시글 리스트 BEGIN -->
+                        
+                        <div class="message-box">
+                            
+                            <div class="message-box-scroll" id="ct">
+                                {% for post in board_post_list %}
+                                <a href="{% url 'board:board_detail' post.id %}">
+                                    <div class="mail-item draft">
+                                        <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingOne">
+                                            <div class="mb-0">
+                                                <div class="mail-item-heading personal collapsed"  data-toggle="collapse" role="navigation" data-target="#mailCollapseOne" aria-expanded="false">
+                                                    <div class="mail-item-inner">
+    
+                                                        <div class="d-flex">
+                                                            <div class="f-body" data-mailfrom="info@mail.com" data-mailto="kf@mail.com" data-mailcc="">
+                                                                <div class="meta-title-tag">
+                                                                    <p class="user-email p-0" style="width: 5%;">{{ post.author }}</p>
+                                                                    <p class="mail-content-excerpt" data-maildescription='{"ops":[{"insert":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pulvinar feugiat consequat. Duis lacus nibh, sagittis id varius vel, aliquet non augue. Vivamus sem ante, ultrices at ex a, rhoncus ullamcorper tellus. Nunc iaculis eu ligula ac consequat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum mattis urna neque, eget posuere lorem tempus non. Suspendisse ac turpis dictum, convallis est ut, posuere sem. Etiam imperdiet aliquam risus, eu commodo urna vestibulum at. Suspendisse malesuada lorem eu sodales aliquam.\n"}]}'><span class="mail-title" data-mailTitle="Web Design News">{{ post.title }} : {{ post.content }}</p>
+                                                                    <div class="tags">
+                                                                        {{ post.category }}
+                                                                    </div>
+                                                                    <p class="meta-time align-self-center">작성일 : {{ post.created_at|date:"Y/m/j" }}</p>
+                                                                    <p class="meta-time align-self-center">수정일 :{{ post.updated_at|date:"Y/m/j" }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- My Blog 게시글 리스트 END -->
+                        
+                    </div>
                     
-                </tbody>
-            </table>
-        </div>
-    </div>
+                </div>
 
+            </div>
+
+
+        </div>
+
+    </div>
 </div>
-{% endblock %}
-{% block script %}
-<script>
-    sorting_asc = document.querySelector(".sorting_asc");
-    sorting_asc.className = "";
-    sorting_th = document.querySelector(".sorting");
-    sorting_th.className = "";
-    sorting_th = document.querySelector(".sorting");
-    sorting_th.className = "";
-</script>
 {% endblock %}
