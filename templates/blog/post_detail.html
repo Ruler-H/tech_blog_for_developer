@@ -132,7 +132,7 @@
                                             <div id="unread-promotion-page" class="mail-item mailInbox">
                                                 <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingThree">
                                                     <div class="mb-0 d-flex justify-content-between align-items-center">
-                                                        <div class="mail-item-heading social collapsed w-100" data-toggle="collapse" role="navigation" data-target="#mailCollapseThree" aria-expanded="false" onclick="changeDisplay('#{{item.comment.author.username}}{{item.comment.pk}}')">
+                                                        <div class="mail-item-heading social collapsed w-100" data-toggle="collapse" role="navigation" data-target="#mailCollapseThree" aria-expanded="false" onclick="changeDisplay('#{{item.comment.author.username}}{{item.comment.pk}}')" id="comment{{item.comment.pk}}_div">
                                                             <div class="mail-item-inner">
                                                                 <div class="d-flex">
                                                                     <div class="f-head">
@@ -154,7 +154,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <input type="text" class="mail-write-box form-control" name="content" placeholder="{{item.comment.content}}" style="display: none;" id="comment{{item.comment.pk}}_input" value="{{item.comment.content}}">
                                                         {% if user == item.comment.author %}
+                                                        <button class="btn btn-secondary" style="width: 7%;" onclick="exchangeDisplay('#comment{{item.comment.pk}}_div', '#comment{{item.comment.pk}}_input')">수정</button>
                                                         <form method="post" action="/blog/comment_delete/{{ item.comment.pk }}/" style="width: 7%;">
                                                             {% csrf_token %}
                                                             <button class="btn btn-dark">삭제</button>
@@ -168,7 +170,7 @@
                                             <div id="read-promotion-page" class="mail-item mailInbox">
                                                 <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingThree">
                                                     <div class="mb-0 d-flex justify-content-between align-items-center">
-                                                        <div class="mail-item-heading social collapsed w-100" data-toggle="collapse" role="navigation" data-target="#mailCollapseThree" aria-expanded="false" style="pointer-events: none;">
+                                                        <div class="mail-item-heading social collapsed w-100" data-toggle="collapse" role="navigation" data-target="#mailCollapseThree" aria-expanded="false" style="pointer-events: none;"  id="recomment{{recomment.pk}}_div">
                                                             <div class="mail-item-inner">
                                                                 <div class="d-flex">
                                                                     <div class="f-head d-flex">
@@ -191,7 +193,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <input type="text" class="mail-write-box form-control" name="content" placeholder="{{recomment.content}}" style="display: none;" id="recomment{{recomment.pk}}_input" value="{{recomment.content}}">
                                                         {% if user == recomment.author %}
+                                                        <button class="btn btn-secondary" style="width: 7%;" onclick="exchangeDisplay('#recomment{{recomment.pk}}_div', '#recomment{{recomment.pk}}_input')">수정</button>
                                                         <form method="post" action="/blog/recomment_delete/{{ recomment.pk }}/" style="width: 7%;">
                                                             {% csrf_token %}
                                                             <button class="btn btn-dark">삭제</button>
@@ -250,7 +254,6 @@
 {% block script %}
 <script>
     const changeDisplay = function(selector) {
-        console.log(selector);
         divDOM = document.querySelector(selector);
         displayStyle = divDOM.style.display;
         if (displayStyle == 'none'){
@@ -259,5 +262,24 @@
             document.querySelector(selector).style.display = 'none';
         }
     };
+
+    const exchangeDisplay = function(selector1, selector2) {
+        const divDOM = document.querySelector(selector1);
+        divStyle = divDOM.style.display;
+        if (divStyle == 'none'){
+            divDOM.style.display = 'block';
+        }else{
+            divDOM.style.display = 'none';
+        }
+        const inputDOM = document.querySelector(selector2);
+        inputStyle = inputDOM.style.display;
+        if (inputStyle == 'none'){
+            inputDOM.style.display = 'block';
+        }else{
+            inputDOM.style.display = 'none';
+        }
+    };
+
+
 </script>
 {% endblock %}
