@@ -20,16 +20,17 @@ class PostListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        current_user = self.request.user
-        categories = Category.objects.all().filter(user=current_user)
+        blog_user = User.objects.get(pk=self.kwargs['pk'])
+        categories = Category.objects.all().filter(user=blog_user)
         context['categories'] = categories
+        context['blog_account'] = blog_user
         return context
 
     def get_queryset(self):
         querySet = super().get_queryset()
-        current_user = self.request.user
-        querySet = querySet.filter(author = current_user)
-        search_keyword = self.request.GET.get('q')
+        blog_user = User.objects.get(pk=self.kwargs['pk'])
+        querySet = querySet.filter(author = blog_user)
+        search_keyword = self.request.GET.get('keyword')
         category = self.request.GET.get('category')
         if category == 'All':
             category = ''

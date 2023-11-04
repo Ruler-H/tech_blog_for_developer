@@ -7,7 +7,7 @@
             <h3>Dev Square</h3>
         </div>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="javascript:void(0);">List</a></li>
+            <li class="breadcrumb-item">List</li>
         </ol>
     </nav>
 </div>
@@ -21,6 +21,7 @@
 
                 <div class="mail-box-container">
                     <div class="mail-overlay"></div>
+                    {% if user.is_authenticated %}
                     <div class="tab-title">
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-12 text-center mail-btn-container">
@@ -28,17 +29,17 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
 
                     <div id="mailbox-inbox" class="accordion mailbox-inbox">
 
-                        <form class="search" action="/blog/search/" method="get">
+                        <form class="search" action="{% url 'board:board_list' %}" method="get">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu mail-menu d-lg-none"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                             <input type="text" class="form-control input-search" placeholder="Search Here..." name="keyword">
                             <select class="m-0 border-0" id="" placeholder="카테고리를 선택하세요." name="category">
                                 <option value="All">All</option>
-                                {% for category in categories %}
-                                <option value="{{ category }}">{{ category }}</option>
-                                {% endfor %}
+                                <option value="Backend">Backend</option>
+                                <option value="Frontend">Frontend</option>
                             </select>
                         </form>
                         
