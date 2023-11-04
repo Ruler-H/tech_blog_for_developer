@@ -10,7 +10,7 @@ from django.views.generic import ListView, DetailView, UpdateView, CreateView, D
 
 from .models import Post, Image, Category, Comment, Recomment
 from accounts.models import User
-from .forms import CommentAddForm, RecommentAddForm
+from .forms import CommentAddForm, RecommentAddForm, CommentEditForm, RecommentEditForm
 import re
 
 
@@ -202,6 +202,31 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
         return render(request, 'blog/post_detail.html', context)
     
 
+class CommentEditView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentEditForm
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        form = CommentEditForm(request.POST)
+        post = Post.objects.get(pk=request.POST.get('post_pk'))
+        if form.is_valid():
+            super().post(request, *args, **kwargs)
+        else:
+            comment_list = []
+            for comment in Comment.objects.filter(post=post):
+                recomments = Recomment.objects.filter(comment=comment)
+                comment_list.append({
+                    'comment': comment,
+                    'recomments': recomments,
+            })
+            context = {
+                'notice': '댓글이 입력되지 않았습니다.',
+                'post': post,
+                'comment_list': comment_list,
+            }
+            return render(request, 'blog/post_detail.html', context)
+        return redirect(post.get_absolute_url())
+    
+
 class RecommentAddView(LoginRequiredMixin, CreateView):
     login_url = '/accounts/login'
     model = Recomment
@@ -255,6 +280,31 @@ class RecommentDeleteView(LoginRequiredMixin, DeleteView):
             'comment_list': comment_list,
         }
         return render(request, 'blog/post_detail.html', context)
+    
+
+class RecommentEditView(LoginRequiredMixin, UpdateView):
+    model = Recomment
+    form_class = RecommentEditForm
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        form = RecommentEditForm(request.POST)
+        post = Post.objects.get(pk=request.POST.get('post_pk'))
+        if form.is_valid():
+            super().post(request, *args, **kwargs)
+        else:
+            comment_list = []
+            for comment in Comment.objects.filter(post=post):
+                recomments = Recomment.objects.filter(comment=comment)
+                comment_list.append({
+                    'comment': comment,
+                    'recomments': recomments,
+            })
+            context = {
+                're_notice': '답글이 입력되지 않았습니다.',
+                'post': post,
+                'comment_list': comment_list,
+            }
+            return render(request, 'blog/post_detail.html', context)
+        return redirect(post.get_absolute_url())
 
 
 class OtherPostListView(ListView):
@@ -288,8 +338,10 @@ postwrite = PostWriteView.as_view()
 postdelete = PostDeleteView.as_view()
 comment_add = CommentAddView.as_view()
 comment_delete = CommentDeleteView.as_view()
+comment_edit = CommentEditView.as_view()
 recomment_add = RecommentAddView.as_view()
 recomment_delete = RecommentDeleteView.as_view()
+recomment_edit = RecommentEditView.as_view()
 other_postlist = OtherPostListView.as_view()
 
 def extract_image(content):

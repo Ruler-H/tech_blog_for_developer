@@ -12,5 +12,6 @@ class BoardDetailView(DetailView):
     model = Board_Post
 
 
+
 board_list = BoardListView.as_view()
 board_detail = BoardDetailView.as_view()

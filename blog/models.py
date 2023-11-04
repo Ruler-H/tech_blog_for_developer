@@ -57,6 +57,9 @@ class Comment(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
 
+    def get_absolute_url(self):
+        return self.post.get_absolute_url()
+
     def __str__(self):
         return f'{self.author} :: {self.content}'
 
@@ -68,6 +71,9 @@ class Recomment(models.Model):
 
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     comment = models.ForeignKey('Comment', on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return self.comment.get_absolute_url()
 
     def __str__(self):
         return f'{self.author} :: {self.content}'
