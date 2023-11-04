@@ -2,7 +2,7 @@ from django.db import models
 
 class Board_Post(models.Model):
     title = models.CharField(max_length=100, null=False)
-    content = models.TextField(null=True)
+    content = models.TextField(null=False)
     category = models.CharField(max_length=100, null=False)
     upload_file = models.FileField(upload_to='board/files/%Y/%m/%d/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -15,7 +15,7 @@ class Board_Post(models.Model):
         return f'{self.title} :: {self.author}'
     
     def get_absolute_url(self):
-        return f'/blog/{self.pk}/'
+        return f'/board/{self.pk}/'
     
     def get_file_name(self):
         return self.upload_file.name.split('/')[-1]
