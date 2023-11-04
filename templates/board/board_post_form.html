@@ -3,10 +3,14 @@
 <div class="page-header">
     <nav class="breadcrumb-one" aria-label="breadcrumb">
         <div class="title">
-            <h3>My Blog</h3>
+            <h3>Dev Square</h3>
         </div>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="javascript:void(0);">write</a></li>
+            {% if url == 'edit' %}
+                <li class="breadcrumb-item">edit</li>
+            {% else %}
+                <li class="breadcrumb-item">write</li>
+            {% endif %}
         </ol>
     </nav>
 </div>
@@ -112,13 +116,11 @@
 
     document.querySelector('.postform').addEventListener('submit', function() {
         q = document.querySelector("#editor-container > .ql-editor");
-        console.log(q.innerHTML);
         content = document.querySelector("#post_content");
         content.value = q.innerHTML;
     });
 
-    {% if post %}
-    console.log('in');
+    {% if board_post %}
     qu = document.querySelector("#editor-container > .ql-editor");
     qu.innerHTML = '{{ board_post.content|safe }}';
     {% endif %}

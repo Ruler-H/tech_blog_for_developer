@@ -12,7 +12,7 @@ class Board_Post(models.Model):
     author = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.title} :: {self.author}'
+        return f'{self.title}'
     
     def get_absolute_url(self):
         return f'/board/{self.pk}/'
