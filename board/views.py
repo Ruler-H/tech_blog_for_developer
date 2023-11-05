@@ -252,6 +252,19 @@ class RecommentEditView(LoginRequiredMixin, UpdateView):
         return context
 
 
+class RecommentDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/accounts/login/'
+    model = Board_Recomment
+
+    def get_success_url(self) -> str:
+        '''
+        삭제 완료 시 redirect를 위한 success url
+        '''
+        post_pk = self.request.POST.get('post_pk')
+        board_post = Board_Post.objects.get(pk=post_pk)
+        return board_post.get_absolute_url()
+
+
 board_list = BoardListView.as_view()
 board_detail = BoardDetailView.as_view()
 board_write = BoardWriteView.as_view()
@@ -262,3 +275,4 @@ comment_edit = CommentEditView.as_view()
 comment_delete = CommentDeleteView.as_view()
 recomment_write = RecommentWriteView.as_view()
 recomment_edit = RecommentEditView.as_view()
+recomment_delete = RecommentDeleteView.as_view()
