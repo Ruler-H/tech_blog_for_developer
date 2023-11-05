@@ -30,6 +30,12 @@ class BoardListView(ListView):
 class BoardDetailView(DetailView):
     model = Board_Post
 
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        board_post = Board_Post.objects.get(pk=self.kwargs['pk'])
+        board_post.view_count += 1
+        board_post.save()
+        return super().get(request, *args, **kwargs)
+
 
 class BoardWriteView(LoginRequiredMixin, CreateView):
     login_url = '/accounts/login/'
