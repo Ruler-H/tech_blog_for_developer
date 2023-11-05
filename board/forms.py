@@ -59,3 +59,14 @@ class RecommentWriteForm(ModelForm):
     class Meta:
         model = Board_Recomment
         fields = ['content']
+
+
+class RecommentEditForm(ModelForm):
+    '''
+    게시글 대댓글 수정 폼
+    '''
+    content = forms.CharField(widget=forms.Textarea, error_messages={'required': '답글을 입력해주세요.'})
+
+    class Meta:
+        model = Board_Recomment
+        fields = ['content']

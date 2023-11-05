@@ -208,10 +208,10 @@
                                                             </div>
                                                         </div>
                                                         <div class="mail-item-heading social collapsed w-100 p-0" style="display: none;" id="recomment{{recomment.pk}}_input">
-                                                            <form method="post" action="{% url 'blog:recomment_edit' recomment.pk %}">
+                                                            <form method="post" action="{% url 'board:recomment_edit' recomment.pk %}">
                                                                 {% csrf_token %}
                                                                 <input type="text" class="mail-write-box form-control border-0" name="content" placeholder="{{recomment.content}}" value="{{recomment.content}}">
-                                                                <input type="hidden" style="display: none;" value="{{ post.pk }}" name="post_pk">
+                                                                <input type="hidden" style="display: none;" value="{{ board_post.pk }}" name="post_pk">
                                                             </form>
                                                         </div>
                                                         {% if user == recomment.author %}

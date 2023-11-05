@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Board_Post, Board_Comment, Board_Recomment
-from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm, RecommentWriteForm
+from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm, RecommentWriteForm, RecommentEditForm
 
 class BoardListView(ListView):
     model = Board_Post
@@ -226,6 +226,32 @@ class RecommentWriteView(LoginRequiredMixin, CreateView):
         return context
 
 
+class RecommentEditView(LoginRequiredMixin, UpdateView):
+    '''
+    게시판 대댓글 수정 View
+    '''
+    model = Board_Recomment
+    form_class = RecommentEditForm
+    template_name = 'board/board_post_detail.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        board_post = Board_Post.objects.get(pk=self.request.POST['post_pk'])
+        context['board_post'] = board_post
+        comment_list = []
+        for comment in Board_Comment.objects.filter(board_post=board_post):
+            recomment = Board_Recomment.objects.filter(board_comment=comment)
+            comment_list.append({
+                'comment':comment,
+                'recomments':recomment,
+            })
+        context['comment_list'] = comment_list
+        return context
+
+
 board_list = BoardListView.as_view()
 board_detail = BoardDetailView.as_view()
 board_write = BoardWriteView.as_view()
@@ -235,3 +261,4 @@ comment_write = CommentWriteView.as_view()
 comment_edit = CommentEditView.as_view()
 comment_delete = CommentDeleteView.as_view()
 recomment_write = RecommentWriteView.as_view()
+recomment_edit = RecommentEditView.as_view()
