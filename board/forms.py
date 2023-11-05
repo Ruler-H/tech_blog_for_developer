@@ -2,7 +2,7 @@ from typing import Any
 from django import forms
 from django.forms import ModelForm
 
-from .models import Board_Post, Board_Comment
+from .models import Board_Post, Board_Comment, Board_Recomment
 
 class BoardWriteForm(ModelForm):
     '''
@@ -47,4 +47,15 @@ class CommentEditForm(ModelForm):
 
     class Meta:
         model = Board_Comment
+        fields = ['content']
+
+
+class RecommentWriteForm(ModelForm):
+    '''
+    게시글 대댓글 작성 폼
+    '''
+    content = forms.CharField(widget=forms.Textarea, error_messages={'required': '답글을 입력해주세요.'})
+
+    class Meta:
+        model = Board_Recomment
         fields = ['content']

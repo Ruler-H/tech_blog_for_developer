@@ -179,6 +179,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- 대댓글 BEGIN -->
                                             {% for recomment in item.recomments %}
                                             <div id="read-promotion-page" class="mail-item mailInbox">
                                                 <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingThree">
@@ -233,10 +234,11 @@
                                                 <div style="display: none;" id="{{item.comment.author.username}}{{item.comment.pk}}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                                                     <input type="text" class="mail-write-box form-control" placeholder="답글을 입력하세요." name="content">
-                                                    <input type="hidden" value="{{ post.pk }}" style="display: none;" name="post_pk">
+                                                    <input type="hidden" value="{{ board_post.pk }}" style="display: none;" name="post_pk">
                                                     <input type="hidden" value="{{ item.comment.pk }}" style="display: none;" name="comment_pk">
                                                 </div>
                                             </form>
+                                            <!-- 대댓글 END -->
                                         {% endfor %}
                                         
                                         <form class="chat-form" action="{% url 'board:comment_write' %}" method="post">

@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Board_Post, Board_Comment, Board_Recomment
-from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm
+from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm, RecommentWriteForm
 
 class BoardListView(ListView):
     model = Board_Post
@@ -66,7 +66,6 @@ class BoardWriteView(LoginRequiredMixin, CreateView):
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         form = BoardWriteForm(request.POST)
-        print(form)
         if form.is_valid():
             board_post = form.save(commit=False)
             board_post.author = request.user
@@ -163,13 +162,14 @@ class CommentWriteView(LoginRequiredMixin, CreateView):
         '''
         form = CommentWriteForm(request.POST)
         board_post = Board_Post.objects.get(pk=request.POST['post_pk'])
-        print(form)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user
             comment.board_post = board_post
             comment.save()
-        return redirect(board_post.get_absolute_url())
+            return redirect(board_post.get_absolute_url())
+        
+        return super().post(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         '''
@@ -192,8 +192,38 @@ class CommentWriteView(LoginRequiredMixin, CreateView):
 class RecommentWriteView(LoginRequiredMixin, CreateView):
     '''
     게시글 대댓글 작성 View
-    [ ] 대댓글 작성 구현 필요
+    [x] 대댓글 작성 구현 필요
     '''
+    model = Board_Recomment
+    form_class = RecommentWriteForm
+    template_name = 'board/board_post_detail.html'
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        form = RecommentWriteForm(request.POST)
+        if form.is_valid():
+            recomment = form.save(commit=False)
+            recomment.author = request.user
+            recomment.board_comment = Board_Comment.objects.get(pk=request.POST['comment_pk'])
+            recomment.save()
+            return redirect(recomment.get_absolute_url())
+        return super().post(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        board_post = Board_Post.objects.get(pk=self.request.POST['post_pk'])
+        context['board_post'] = board_post
+        comment_list = []
+        for comment in Board_Comment.objects.filter(board_post=board_post):
+            recomment = Board_Recomment.objects.filter(board_comment=comment)
+            comment_list.append({
+                'comment':comment,
+                'recomments':recomment,
+            })
+        context['comment_list'] = comment_list
+        return context
 
 
 board_list = BoardListView.as_view()
@@ -204,5 +234,4 @@ board_delete = BoardDeleteView.as_view()
 comment_write = CommentWriteView.as_view()
 comment_edit = CommentEditView.as_view()
 comment_delete = CommentDeleteView.as_view()
-
 recomment_write = RecommentWriteView.as_view()
