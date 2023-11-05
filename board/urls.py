@@ -11,7 +11,7 @@ urlpatterns = [
     path('delete/<int:pk>/', views.board_delete, name='board_delete'),
     path('comment/write/', views.comment_write, name='comment_write'),
     path('comment/edit/<int:pk>/', views.comment_edit, name='comment_edit'),
-
     path('comment/delete/<int:pk>/', views.comment_delete, name='comment_delete'),
+
     path('recomment/write/', views.recomment_write, name='recomment_write'),
 ]

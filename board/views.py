@@ -96,13 +96,28 @@ class BoardEditView(LoginRequiredMixin, UpdateView):
 
 
 class BoardDeleteView(LoginRequiredMixin, DeleteView):
+    '''
+    게시글 삭제 View
+    [ ] success url 설정
+    '''
     login_url = '/accounts/login/'
     model = Board_Post
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    '''
+    게시글 댓글 삭제 View
+    '''
     login_url = '/accounts/login/'
     model = Board_Comment
+    
+    def get_success_url(self) -> str:
+        '''
+        삭제 완료 시 redirect를 위한 success url
+        '''
+        post_pk = self.request.POST.get('post_pk')
+        board_post = Board_Post.objects.get(pk=post_pk)
+        return board_post.get_absolute_url()
 
 
 class CommentEditView(LoginRequiredMixin, UpdateView):
@@ -112,6 +127,24 @@ class CommentEditView(LoginRequiredMixin, UpdateView):
     login_url = '/accounts/login/'
     model = Board_Comment
     form_class = CommentEditForm
+    template_name = 'board/board_post_detail.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        board_post = Board_Post.objects.get(pk=self.request.POST['post_pk'])
+        context['board_post'] = board_post
+        comment_list = []
+        for comment in Board_Comment.objects.filter(board_post=board_post):
+            recomment = Board_Recomment.objects.filter(board_comment=comment)
+            comment_list.append({
+                'comment':comment,
+                'recomments':recomment,
+            })
+        context['comment_list'] = comment_list
+        return context
 
 
 class CommentWriteView(LoginRequiredMixin, CreateView):
@@ -162,6 +195,7 @@ class RecommentWriteView(LoginRequiredMixin, CreateView):
     [ ] 대댓글 작성 구현 필요
     '''
 
+
 board_list = BoardListView.as_view()
 board_detail = BoardDetailView.as_view()
 board_write = BoardWriteView.as_view()
@@ -169,6 +203,6 @@ board_edit = BoardEditView.as_view()
 board_delete = BoardDeleteView.as_view()
 comment_write = CommentWriteView.as_view()
 comment_edit = CommentEditView.as_view()
-
 comment_delete = CommentDeleteView.as_view()
+
 recomment_write = RecommentWriteView.as_view()

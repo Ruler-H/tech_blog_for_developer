@@ -117,16 +117,21 @@
                                         {% endif %}
         
                                     </div>
+                                    <!-- 댓글 BEGIN -->
                                     <div class="attachments">
                                         <h6 class="attachments-section-title">댓글</h6>
-                                        {% if re_notice %}
+                                        <!-- 댓글 & 대댓글 에러 BEGIN -->
+                                        {% if form.errors %}
                                             <div class="alert alert-light-danger border-0 mb-4" role="alert"> 
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"> 
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="alert"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                </button> 
-                                                <strong>{{ re_notice }}</strong>
+                                                </button>
+                                                {% for field in form %} 
+                                                    <strong>{{ field.errors }}</strong>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
+                                        <!-- 댓글 & 대댓글 에러 END -->
                                         {% for item in comment_list %}
                                             <div id="unread-promotion-page" class="mail-item mailInbox">
                                                 <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingThree">
@@ -167,7 +172,7 @@
                                                                 {% csrf_token %}
                                                                 <button id="btn-compose-mail" class="btn btn-block py-1" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
                                                                 
-                                                                <input type="text" style="display: none;" value="{{ post.pk }}" name="post_pk">
+                                                                <input type="text" style="display: none;" value="{{ board_post.pk }}" name="post_pk">
                                                             </form>
                                                         </div>
                                                         {% endif %}
@@ -233,16 +238,7 @@
                                                 </div>
                                             </form>
                                         {% endfor %}
-                                        {% if form.errors %}
-                                            <div class="alert alert-light-danger border-0 mb-4" role="alert"> 
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="alert"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                </button>
-                                                {% for field in form %} 
-                                                    <strong>{{ field.errors }}</strong>
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
+                                        
                                         <form class="chat-form" action="{% url 'board:comment_write' %}" method="post">
                                             {% csrf_token %}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
@@ -250,6 +246,7 @@
                                             <input type="hidden" name="post_pk" value="{{board_post.pk}}">
                                         </form>
                                     </div>
+                                    <!-- 댓글 END -->
                                 </div>
                                 <!-- My Blog 게시글 END -->
                                 
