@@ -44,6 +44,9 @@ class PostListView(LoginRequiredMixin, ListView):
     
 
 class PostDetailView(DetailView):
+    '''
+    블로그 글 상세보기 View
+    '''
     model = Post
 
     def get(self, request, *args, **kwargs):
@@ -71,6 +74,9 @@ class PostDetailView(DetailView):
     
 
 class PostWriteView(LoginRequiredMixin, CreateView):
+    '''
+    블로그 글 작성 View
+    '''
     login_url = '/accounts/login/'
     model = Post
     fields = ['title', 'content', 'upload_file', 'category']
@@ -333,7 +339,7 @@ class OtherPostListView(ListView):
 
 
 postlist = PostListView.as_view()
-postdetail = PostDetailView.as_view()
+post_detail = PostDetailView.as_view()
 postedit = PostEditView.as_view()
 postwrite = PostWriteView.as_view()
 postdelete = PostDeleteView.as_view()

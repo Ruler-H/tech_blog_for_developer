@@ -97,10 +97,11 @@ class BoardEditView(LoginRequiredMixin, UpdateView):
 class BoardDeleteView(LoginRequiredMixin, DeleteView):
     '''
     게시글 삭제 View
-    [ ] success url 설정
+    [x] success url 설정
     '''
     login_url = '/accounts/login/'
     model = Board_Post
+    success_url = '/board/'
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
@@ -253,6 +254,9 @@ class RecommentEditView(LoginRequiredMixin, UpdateView):
 
 
 class RecommentDeleteView(LoginRequiredMixin, DeleteView):
+    '''
+    게시판 대댓글 삭제 View
+    '''
     login_url = '/accounts/login/'
     model = Board_Recomment
 

@@ -57,7 +57,7 @@
                             
                             <div class="message-box-scroll" id="ct">
                                 {% for post in post_list %}
-                                <a href="{% url 'blog:postdetail' post.id %}">
+                                <a href="{% url 'blog:post_detail' post.id %}">
                                     <div class="mail-item draft">
                                         <div class="animated animatedFadeInUp fadeInUp" id="mailHeadingOne">
                                             <div class="mb-0">
@@ -70,7 +70,7 @@
                                                                     <p class="user-email" data-mailTo="kf@mail.com">{{ post.author }}</p>
                                                                 </div>
                                                                 <div class="meta-title-tag">
-                                                                    <p class="mail-content-excerpt" data-maildescription='{"ops":[{"insert":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pulvinar feugiat consequat. Duis lacus nibh, sagittis id varius vel, aliquet non augue. Vivamus sem ante, ultrices at ex a, rhoncus ullamcorper tellus. Nunc iaculis eu ligula ac consequat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum mattis urna neque, eget posuere lorem tempus non. Suspendisse ac turpis dictum, convallis est ut, posuere sem. Etiam imperdiet aliquam risus, eu commodo urna vestibulum at. Suspendisse malesuada lorem eu sodales aliquam.\n"}]}'><span class="mail-title" data-mailTitle="Web Design News">{{ post.title }} : {{ post.content }}</p>
+                                                                    <p class="mail-content-excerpt">{{ post.title }}</p>
                                                                     <div class="tags">
                                                                         {{ post.category }}
                                                                     </div>

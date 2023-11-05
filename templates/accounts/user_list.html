@@ -111,7 +111,6 @@
                             </div>
                         </div>
                     </div>
-                    {{user}}
                     {% for subscription in user.subscriptions.all %}
                         <div class="items">
                             <a href="{% url 'blog:other_postlist' subscription.pk %}">

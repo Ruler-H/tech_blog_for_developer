@@ -1,410 +1,154 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<!-- Blog Post BEGIN-->
 <div class="page-header">
     <div class="page-title">
         <h3>Blog Post</h3>
     </div>
 </div>
 <div class="row layout-top-spacing">
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
+    {% for blog_post in blog_post_list %}
+        <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <a href="{% url 'blog:post_detail' blog_post.pk %}">
+                <div class="card component-card_9 w-100" role="navigation">
+                    <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
+                    <div class="card-body">
+                        <p class="meta-date">{{blog_post.created_at|date:"Y년 m월 j일"}}</p>
+            
+                        <h5 class="card-title">{{blog_post.title}}</h5>
+                        <p class="card-text">{{blog_post.content}}</p>
+            
+                        <div class="meta-info">
+                            <div class="mail-content-container mailInbox">
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex user-info">
+                                        <div class="f-head">
+                                            {% if blog_post.author.profile_image %}
+                                                <img src="{{ blog_post.author.profile_image.url }}" style="border-radius: 70%; width: 2rem; height: 2rem;" alt="avatar">
+                                            {% else %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="user-name">{{blog_post.author.username}}</div>
+                                </div>
+                            </div>
+            
+                            <div class="meta-action">
+                                <div class="meta-view">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> {{blog_post.view_count}}
+                                </div>
+                            </div>
+            
                         </div>
-                        <div class="user-name">Luke Ivory</div>
+            
                     </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
                 </div>
-    
-            </div>
+            </a>
         </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>
-<div class="page-header">
-    <div class="page-title">
-        <h3>Subscribe Post</h3>
-    </div>
-</div>
-<div class="row layout-top-spacing">
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
+<!-- Blog Post END-->
+<!-- Blog Post BEGIN-->
+{% if user.is_authenticated %}
+    <div class="page-header">
+        <div class="page-title">
+            <h3>Subscribe Post</h3>
         </div>
     </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
+    <div class="row layout-top-spacing">
+        {% for subscription_post in subscription_post_list %}
+            <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+                <a href="{% url 'blog:post_detail' subscription_post.pk %}">
+                    <div class="card component-card_9 w-100" role="navigation">
+                        <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
+                        <div class="card-body">
+                            <p class="meta-date">{{subscription_post.created_at|date:"Y년 m월 j일"}}</p>
+                
+                            <h5 class="card-title">{{subscription_post.title}}</h5>
+                            <p class="card-text">{{subscription_post.content}}</p>
+                
+                            <div class="meta-info">
+                                <div class="mail-content-container mailInbox">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex user-info">
+                                            <div class="f-head">
+                                                {% if subscription_post.author.profile_image %}
+                                                    <img src="{{ subscription_post.author.profile_image.url }}" style="border-radius: 70%; width: 2rem; height: 2rem;" alt="avatar">
+                                                {% else %}
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="user-name">{{subscription_post.author.username}}</div>
+                                    </div>
+                                </div>
+                
+                                <div class="meta-action">
+                                    <div class="meta-view">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> {{subscription_post.view_count}}
+                                    </div>
+                                </div>
+                
+                            </div>
+                
                         </div>
-                        <div class="user-name">Luke Ivory</div>
                     </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
+                </a>
             </div>
-        </div>
+        {% endfor %}
     </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
-</div>
+{% endif %}
+<!-- Blog Post END-->
+<!-- Dev Square Post BEGIN-->
 <div class="page-header">
     <div class="page-title">
         <h3>Dev Square</h3>
     </div>
 </div>
 <div class="row layout-top-spacing">
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
+    {% for board_post in board_post_list %}
+        <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
+            <a href="{% url 'board:board_detail' board_post.pk %}">
+                <div class="card component-card_9 w-100" role="navigation">
+                    <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
+                    <div class="card-body">
+                        <p class="meta-date">{{board_post.created_at|date:"Y년 m월 j일"}}</p>
+            
+                        <h5 class="card-title">{{board_post.title}}</h5>
+                        <p class="card-text">{{board_post.content}}</p>
+            
+                        <div class="meta-info">
+                            <div class="mail-content-container mailInbox">
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex user-info">
+                                        <div class="f-head">
+                                            {% if board_post.author.profile_image %}
+                                                <img src="{{ board_post.author.profile_image.url }}" style="border-radius: 70%; width: 2rem; height: 2rem;" alt="avatar">
+                                            {% else %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="user-name">{{board_post.author.username}}</div>
+                                </div>
+                            </div>
+            
+                            <div class="meta-action">
+                                <div class="meta-view">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> {{board_post.view_count}}
+                                </div>
+                            </div>
+            
                         </div>
-                        <div class="user-name">Luke Ivory</div>
+            
                     </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
                 </div>
-    
-            </div>
+            </a>
         </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
-    <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-        <div class="card component-card_9">
-            <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
-            <div class="card-body">
-                <p class="meta-date">25 Jan 2020</p>
-    
-                <h5 class="card-title">How to Start a Blog in 5 Easy Steps.</h5>
-                <p class="card-text">Vestibulum vestibulum tortor ut eros tincidunt, ut rutrum elit volutpat.</p>
-    
-                <div class="meta-info">
-                    <div class="meta-user">
-                        <div class="avatar avatar-sm">
-                            <span class="avatar-title rounded-circle">AG</span>
-                        </div>
-                        <div class="user-name">Luke Ivory</div>
-                    </div>
-    
-                    <div class="meta-action">
-                        <div class="meta-likes">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 51
-                        </div>
-
-                        <div class="meta-view">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> 250
-                        </div>
-                    </div>
-    
-                </div>
-    
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>
+<!-- Dev Square Post END-->
 {% endblock %}
 
