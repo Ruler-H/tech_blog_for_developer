@@ -49,6 +49,9 @@ class Board_Comment(models.Model):
 
     def __str__(self):
         return f'{self.author} :: {self.content}'
+    
+    def get_absolute_url(self):
+        return self.board_post.get_absolute_url()
 
 
 class Board_Recomment(models.Model):
@@ -61,3 +64,6 @@ class Board_Recomment(models.Model):
 
     def __str__(self):
         return f'{self.author} :: {self.content}'
+    
+    def get_absolute_url(self):
+        return self.board_comment.get_absolute_url()

@@ -282,5 +282,22 @@
             document.querySelector(selector).style.display = 'none';
         }
     };
+
+    const exchangeDisplay = function(selector1, selector2) {
+        const divDOM = document.querySelector(selector1);
+        divStyle = divDOM.style.display;
+        if (divStyle == 'none'){
+            divDOM.style.display = 'block';
+        }else{
+            divDOM.style.display = 'none';
+        }
+        const inputDOM = document.querySelector(selector2);
+        inputStyle = inputDOM.style.display;
+        if (inputStyle == 'none'){
+            inputDOM.style.display = 'block';
+        }else{
+            inputDOM.style.display = 'none';
+        }
+    };
 </script>
 {% endblock %}

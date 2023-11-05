@@ -37,3 +37,14 @@ class CommentWriteForm(ModelForm):
     class Meta:
         model = Board_Comment
         fields = ['content']
+
+    
+class CommentEditForm(ModelForm):
+    '''
+    게시글 댓글 수정 폼
+    '''
+    content = forms.CharField(widget=forms.Textarea, error_messages={'required': '댓글을 입력해주세요.'})
+
+    class Meta:
+        model = Board_Comment
+        fields = ['content']

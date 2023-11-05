@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Board_Post, Board_Comment, Board_Recomment
-from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm
+from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm
 
 class BoardListView(ListView):
     model = Board_Post
@@ -106,8 +106,12 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class CommentEditView(LoginRequiredMixin, UpdateView):
+    '''
+    게시글 댓글 수정 View
+    '''
     login_url = '/accounts/login/'
     model = Board_Comment
+    form_class = CommentEditForm
 
 
 class CommentWriteView(LoginRequiredMixin, CreateView):
@@ -164,7 +168,7 @@ board_write = BoardWriteView.as_view()
 board_edit = BoardEditView.as_view()
 board_delete = BoardDeleteView.as_view()
 comment_write = CommentWriteView.as_view()
+comment_edit = CommentEditView.as_view()
 
 comment_delete = CommentDeleteView.as_view()
-comment_edit = CommentEditView.as_view()
 recomment_write = RecommentWriteView.as_view()
