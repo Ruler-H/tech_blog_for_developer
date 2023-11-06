@@ -30,8 +30,8 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '*'
-    # '3.38.12.42', # 서버 고정 ip
+    # '*'
+    '3.38.12.42', # 서버 고정 ip
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
