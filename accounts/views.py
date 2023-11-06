@@ -22,7 +22,6 @@ class CustomLoginView(LoginView):
     next_page = ''
 
     def post(self, request: HttpRequest, *args, **kwargs):
-        print(request.POST)
         return super(CustomLoginView, self).post(request, *args, **kwargs)
 
 class SignUpView(CreateView):
