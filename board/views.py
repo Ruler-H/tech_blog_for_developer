@@ -10,6 +10,9 @@ from .models import Board_Post, Board_Comment, Board_Recomment
 from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm, RecommentWriteForm, RecommentEditForm
 
 class BoardListView(ListView):
+    '''
+    게시판 게시글 목록 View
+    '''
     model = Board_Post
     ordering = '-pk'
 
@@ -30,11 +33,11 @@ class BoardListView(ListView):
 
 class BoardDetailView(DetailView):
     '''
-    게시글 상세보기
+    게시글 상세보기 View
     '''
     model = Board_Post
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    def get(self, request, *args, **kwargs):
         '''
         상세보기 get 요청 시 조회수 증가
         '''
@@ -43,7 +46,7 @@ class BoardDetailView(DetailView):
         board_post.save()
         return super().get(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -61,11 +64,14 @@ class BoardDetailView(DetailView):
 
 
 class BoardWriteView(LoginRequiredMixin, CreateView):
+    '''
+    게시판 글 작성 View
+    '''
     login_url = '/accounts/login/'
     model = Board_Post
     form_class = BoardWriteForm
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         form = BoardWriteForm(request.POST)
         if form.is_valid():
             board_post = form.save(commit=False)
@@ -77,10 +83,13 @@ class BoardWriteView(LoginRequiredMixin, CreateView):
     
 
 class BoardEditView(LoginRequiredMixin, UpdateView):
+    '''
+    게시판 게시글 수정 View
+    '''
     login_url = '/accounts/login/'
     model = Board_Post
     form_class = BoardEditForm
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         form = BoardEditForm(request.POST)
         print(form)
         board_post = form.save(commit=False)
@@ -93,7 +102,7 @@ class BoardEditView(LoginRequiredMixin, UpdateView):
             return redirect(board_post.get_absolute_url())
         return super().post(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['url'] = 'edit'
         return context
@@ -116,7 +125,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/accounts/login/'
     model = Board_Comment
     
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         '''
         삭제 완료 시 redirect를 위한 success url
         '''
@@ -134,7 +143,7 @@ class CommentEditView(LoginRequiredMixin, UpdateView):
     form_class = CommentEditForm
     template_name = 'board/board_post_detail.html'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -161,7 +170,7 @@ class CommentWriteView(LoginRequiredMixin, CreateView):
     form_class = CommentWriteForm
     template_name = 'board/board_post_detail.html'
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         '''
         댓글 작성 시 유효성을 검사
         유효성 통과 시 댓글을 저장
@@ -177,7 +186,7 @@ class CommentWriteView(LoginRequiredMixin, CreateView):
         
         return super().post(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -205,7 +214,7 @@ class RecommentWriteView(LoginRequiredMixin, CreateView):
     form_class = RecommentWriteForm
     template_name = 'board/board_post_detail.html'
 
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request, *args, **kwargs):
         form = RecommentWriteForm(request.POST)
         if form.is_valid():
             recomment = form.save(commit=False)
@@ -215,7 +224,7 @@ class RecommentWriteView(LoginRequiredMixin, CreateView):
             return redirect(recomment.get_absolute_url())
         return super().post(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -242,7 +251,7 @@ class RecommentEditView(LoginRequiredMixin, UpdateView):
     form_class = RecommentEditForm
     template_name = 'board/board_post_detail.html'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -267,7 +276,7 @@ class RecommentDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/accounts/login/'
     model = Board_Recomment
 
-    def get_success_url(self) -> str:
+    def get_success_url(self):
         '''
         삭제 완료 시 redirect를 위한 success url
         '''
@@ -289,5 +298,9 @@ recomment_edit = RecommentEditView.as_view()
 recomment_delete = RecommentDeleteView.as_view()
 
 def extract_image(content):
+    '''
+    content의 첫 이미지의 src를 리턴
+    '''
     image_list = re.findall('<img src=".+">', content)
-    return image_list[0][10:-2]
+    if image_list:
+        return image_list[0][10:-2]
