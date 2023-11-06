@@ -33,6 +33,24 @@
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                    <div class="tab-title">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-12 text-center mail-btn-container">
+                                <a id="btn-compose-mail" class="btn btn-block subscription_btn" href="#">
+                                    {% if blog_account in user.subscriptions.all %}
+                                        <svg id="subscription_svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgba(231, 81, 90, 0.419608)" stroke="#e7515a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                        </svg>
+                                    {% else %}
+                                        <svg id="subscription_svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                        </svg>
+                                    {% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     {% endif %}
 
                     <div id="mailbox-inbox" class="accordion mailbox-inbox">
@@ -102,4 +120,44 @@
 
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    subscription_btn = document.querySelector('.subscription_btn');
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    subscription_btn.addEventListener('click', ()=>{
+        // const form = document.querySelector('#subscription_form');
+        // form.submit();
+        $.ajax({
+            type: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            url: "{% url 'accounts:subscribe_manage' blog_account.pk %}",
+            data: {},
+        })
+        subscription_svg = document.querySelector('#subscription_svg');
+        subsctiption_fill = subscription_svg.getAttribute('fill');
+        if (subsctiption_fill == "none"){
+            subscription_svg.setAttribute("fill", "rgba(231, 81, 90, 0.419608)");
+            subscription_svg.setAttribute("stroke", "#e7515a");
+        }else{
+            subscription_svg.setAttribute("fill", "none");
+            subscription_svg.setAttribute("stroke", "currentColor");
+        };
+    });
+</script>
 {% endblock %}

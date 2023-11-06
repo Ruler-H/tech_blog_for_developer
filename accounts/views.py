@@ -1,4 +1,6 @@
 from typing import Any
+from django.core.handlers.wsgi import WSGIRequest
+from django.template.response import TemplateResponse
 from django.views import View
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from django.shortcuts import render, redirect
@@ -128,11 +130,13 @@ class PasswordChangeView(View):
 class SubscribeView(LoginRequiredMixin, ListView):
     model = User
     form_class = SubscribeForm
+    login_url = '/accounts/login/'
 
 
 class SubscribeDeleteView(LoginRequiredMixin, DeleteView):
     model = User
     form_class = SubscribeForm
+    login_url = '/accounts/login/'
 
     def post(self, request: HttpRequest, *args, **kwargs):
         sub_pk = kwargs.get("subscription_pk")
@@ -141,6 +145,38 @@ class SubscribeDeleteView(LoginRequiredMixin, DeleteView):
         user.subscriptions.remove(subscription)
         user.save()
         return redirect('/accounts/subscribe/')
+    
+
+class SubscribeManageView(LoginRequiredMixin, UpdateView):
+    '''
+    구독 관리 View
+    구독되어 있는 경우 해제
+    구독안되어 있는 경우 추가
+    '''
+    model = User
+    login_url = '/accounts/login/'
+    template_name = 'blog/post_list.html'
+    fields = ['subscriptions']
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        '''
+        post 요청이 올 경우
+        현재 요청 유저의 subscriptions 목록을 확인하여
+        목록에 포함되어 있는 경우 구독 해제
+        목록에 없는 경우 구독
+        '''
+        subscription_pk = kwargs.get('pk')
+        subscription_user = User.objects.get(pk=subscription_pk)
+        current_user = request.user
+        
+        if subscription_user in current_user.subscriptions.all():
+            current_user.subscriptions.remove(subscription_user)
+        else:
+            current_user.subscriptions.add(subscription_user)
+        
+        current_user.save()
+        
+        return HttpResponse('subscription manage success')
 
 
 
@@ -164,3 +200,4 @@ profile_edit = ProfileEditView.as_view()
 password_change = PasswordChangeView.as_view()
 subscribe = SubscribeView.as_view()
 subscribe_delete = SubscribeDeleteView.as_view()
+subscribe_manage = SubscribeManageView.as_view()

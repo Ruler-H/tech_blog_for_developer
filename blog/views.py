@@ -15,6 +15,9 @@ import re
 
 
 class PostListView(LoginRequiredMixin, ListView):
+    '''
+    블로그 Post 목록 View
+    '''
     model = Post
     ordering = '-updated_at'
 
@@ -315,6 +318,9 @@ class RecommentEditView(LoginRequiredMixin, UpdateView):
 
 
 class OtherPostListView(ListView):
+    '''
+    다른 사람의 블로그 View
+    '''
     model = Post
     ordering = '-updated_at'
 
@@ -336,6 +342,14 @@ class OtherPostListView(ListView):
                 Q(category__category__icontains=category)).distinct()
             
         return querySet
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        blog_user = User.objects.get(pk=self.kwargs['other_pk'])
+        categories = Category.objects.all().filter(user=blog_user)
+        context['categories'] = categories
+        context['blog_account'] = blog_user
+        return context
 
 
 postlist = PostListView.as_view()
