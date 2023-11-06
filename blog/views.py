@@ -149,7 +149,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = '/blog'
 
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         current_user = self.request.user
         post = Post.objects.get(pk = self.kwargs["pk"])
         if post.author != current_user:
@@ -166,7 +166,7 @@ class CommentAddView(LoginRequiredMixin, CreateView):
     form_class = CommentWriteForm
     template_name = 'blog/post_detail.html'
 
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         post = Post.objects.get(pk=self.request.POST['post_pk'])
         form = CommentWriteForm(request.POST)
         if form.is_valid():
@@ -179,7 +179,7 @@ class CommentAddView(LoginRequiredMixin, CreateView):
             
         return super().post(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -203,7 +203,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
     '''
     login_url = '/accounts/login'
     
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         comment_pk = kwargs.get('comment_pk')
         del_comment = Comment.objects.get(pk = comment_pk)
         del_comment.delete()
@@ -231,7 +231,7 @@ class CommentEditView(LoginRequiredMixin, UpdateView):
     form_class = CommentEditForm
     template_name = 'blog/post_detail.html'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -258,7 +258,7 @@ class RecommentAddView(LoginRequiredMixin, CreateView):
     form_class = RecommentWriteForm
     template_name = 'blog/post_detail.html'
 
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         post = Post.objects.get(pk=self.request.POST['post_pk'])
         form = RecommentWriteForm(request.POST)
         if form.is_valid():
@@ -271,7 +271,7 @@ class RecommentAddView(LoginRequiredMixin, CreateView):
             return redirect(comment.post.get_absolute_url())
         return super().post(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
@@ -296,7 +296,7 @@ class RecommentDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/accounts/login'
     model = Recomment
 
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         recomment_pk = kwargs.get('recomment_pk')
         del_recomment = Recomment.objects.get(pk = recomment_pk)
         del_recomment.delete()
@@ -324,7 +324,7 @@ class RecommentEditView(LoginRequiredMixin, UpdateView):
     form_class = RecommentEditForm
     template_name = 'blog/post_detail.html'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         '''
         context 반환 시 post의 댓글 & 대댓글을  context에 추가
         '''
