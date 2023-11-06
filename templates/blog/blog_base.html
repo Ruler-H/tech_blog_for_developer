@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block navbar %}
+    <div class="nav-logo align-self-center">
+        <a class="navbar-brand" href="{% url 'index' %}"><img alt="logo" src="{% static 'assets/img/favicon-96x96.png' %}"> <span class="navbar-brand-name">Tech_Blog</span></a>
+    </div>
+    <ul class="navbar-item topbar-navigation">
+        
+        <!--  BEGIN TOPBAR  -->
+        <div class="topbar-nav header navbar" role="banner">
+            <nav id="topbar">
+
+                <ul class="list-unstyled menu-categories" id="topAccordion">
+                    {% if user.is_authenticated %}
+                    <li class="menu single-menu active">
+                        <a href="{% url 'blog:postlist' user.pk %}" aria-expanded="false" class="dropdown-toggle autodroprown" id="blog_menu_a">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                                
+                                <span>My Blog</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </a>
+                    </li>
+                    
+                    <li class="menu single-menu">
+                        <a href="{% url 'accounts:subscribe' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-coffee">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                                <line x1="6" y1="1" x2="6" y2="4"></line>
+                                <line x1="10" y1="1" x2="10" y2="4"></line>
+                                <line x1="14" y1="1" x2="14" y2="4"></line>
+                                </svg>
+                                <span>Subscribe</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="menu single-menu">
+                        <a href="{% url 'board:board_list' %}" aria-expanded="false" class="dropdown-toggle autodroprown">
+                            <div class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                
+                                <span>Dev Square</span>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!--  END TOPBAR  -->
+
+    </ul>
+    {% if user.is_authenticated %}
+    <ul class="navbar-item flex-row ml-auto">
+        <li class="nav-item align-self-center search-animated">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search toggle-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <form class="form-inline search-full form-inline search" role="search">
+                <div class="search-bar">
+                    <input type="text" class="form-control search-form-control  ml-lg-auto" placeholder="Search...">
+                </div>
+            </form>
+        </li>
+    </ul>
+    <ul class="navbar-item flex-row nav-dropdowns">
+
+        <li class="nav-item dropdown user-profile-dropdown order-lg-0 order-1">
+            <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="user-profile-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% if user.profile_image %}
+                <div class="media">
+                    <img src="{{ user.profile_image.url }}" class="img-fluid" alt="admin-profile">
+                </div>
+                {% else %}
+                <div class="media">
+                    <img src="{% static 'assets/img/90x90.jpg' %}" class="img-fluid" alt="admin-profile">
+                </div>
+                {% endif %}
+            </a>
+            <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
+                <div class="user-profile-section">
+                    <div class="media mx-auto">
+                        <div class="media-body">
+                            <h5>{{ user.username }}</h5>
+                            <p>{{ user.development_field }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown-item">
+                    <a href="{% url 'accounts:profile' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> <span>Profile</span>
+                    </a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="{% url 'accounts:logout' %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> <span>Log Out</span>
+                    </a>
+                </div>
+            </div>
+
+        </li>
+    </ul>
+    {% else %}
+    <ul class="d-flex justify-content-end align-items-center w-100">
+        
+            <a class="btn btn-primary mt-2" href="{% url 'accounts:login' %}">로그인</a>
+        
+    </ul>
+    {% endif %}
+{% endblock %}

@@ -12,12 +12,15 @@
         <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
             <a href="{% url 'blog:post_detail' blog_post.pk %}">
                 <div class="card component-card_9 w-100" role="navigation">
-                    <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
+                    {% if blog_post.image %}
+                        <img src="{{blog_post.image}}" class="card-img-top" alt="widget-card-2">
+                    {% else %}
+                        <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2">
+                    {% endif %}
                     <div class="card-body">
                         <p class="meta-date">{{blog_post.created_at|date:"Y년 m월 j일"}}</p>
             
                         <h5 class="card-title">{{blog_post.title}}</h5>
-                        <p class="card-text">{{blog_post.content}}</p>
             
                         <div class="meta-info">
                             <div class="mail-content-container mailInbox">
@@ -62,12 +65,15 @@
             <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
                 <a href="{% url 'blog:post_detail' subscription_post.pk %}">
                     <div class="card component-card_9 w-100" role="navigation">
-                        <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
+                        {% if subscription_post.image %}
+                            <img src="{{subscription_post.image}}" class="card-img-top" alt="widget-card-2">
+                        {% else %}
+                            <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2">
+                        {% endif %}
                         <div class="card-body">
                             <p class="meta-date">{{subscription_post.created_at|date:"Y년 m월 j일"}}</p>
                 
                             <h5 class="card-title">{{subscription_post.title}}</h5>
-                            <p class="card-text">{{subscription_post.content}}</p>
                 
                             <div class="meta-info">
                                 <div class="mail-content-container mailInbox">
@@ -112,12 +118,15 @@
         <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
             <a href="{% url 'board:board_detail' board_post.pk %}">
                 <div class="card component-card_9 w-100" role="navigation">
-                    <img src="{% static 'assets/img/400x300.jpg' %}" class="card-img-top" alt="widget-card-2">
+                    {% if board_post.image %}
+                        <img src="{{board_post.image}}" class="card-img-top" alt="widget-card-2">
+                    {% else %}
+                        <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2">
+                    {% endif %}
                     <div class="card-body">
                         <p class="meta-date">{{board_post.created_at|date:"Y년 m월 j일"}}</p>
             
                         <h5 class="card-title">{{board_post.title}}</h5>
-                        <p class="card-text">{{board_post.content}}</p>
             
                         <div class="meta-info">
                             <div class="mail-content-container mailInbox">

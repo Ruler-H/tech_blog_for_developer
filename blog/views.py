@@ -8,9 +8,9 @@ from django.http import HttpRequest, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
-from .models import Post, Image, Category, Comment, Recomment
+from .models import Post, Category, Comment, Recomment
 from accounts.models import User
-from .forms import CommentAddForm, RecommentAddForm, CommentEditForm, RecommentEditForm
+from .forms import CommentWriteForm, RecommentWriteForm, CommentEditForm, RecommentEditForm, PostWriteForm, PostEditForm
 import re
 
 
@@ -19,7 +19,7 @@ class PostListView(LoginRequiredMixin, ListView):
     블로그 Post 목록 View
     '''
     model = Post
-    ordering = '-updated_at'
+    ordering = '-pk'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,8 +63,6 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
-        images = Image.objects.all().filter(post=context['post'])
-        context['images'] = images
         comment_list = []
         for comment in Comment.objects.filter(post=context['post']):
             recomments = Recomment.objects.filter(comment=comment)
@@ -82,10 +80,7 @@ class PostWriteView(LoginRequiredMixin, CreateView):
     '''
     login_url = '/accounts/login/'
     model = Post
-    fields = ['title', 'content', 'upload_file', 'category']
-
-    def form_valid(self, form):
-        return super().form_valid(form)
+    form_class = PostWriteForm
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -95,22 +90,26 @@ class PostWriteView(LoginRequiredMixin, CreateView):
         return context
     
     def post(self, request, *args, **kwargs):
+        form = PostWriteForm(request.POST)
         current_user = self.request.user
-        title = request.POST.get('title')
-        content = request.POST.get('post-content')
-        extract_image(content)
-        upload_file = request.POST.get('upload_file')
-        category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
-        write_post = Post.objects.create(title=title, content=content, upload_file=upload_file, category=category, author=current_user)
-        write_post.save()
-
-        return redirect(write_post.get_absolute_url())
+        if form.is_valid():
+            post = form.save(commit=False)
+            image = extract_image(post.content)
+            post.author = current_user
+            post.category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
+            post.image = image
+            post.save()
+            return redirect(post.get_absolute_url())
+        return super().post(request, *args, **kwargs)
     
 
 class PostEditView(LoginRequiredMixin, UpdateView):
+    '''
+    블로그 게시글 수정 View
+    '''
     login_url = '/accounts/login/'
     model = Post
-    fields = ['title',  'content', 'upload_file', 'category']
+    form_class = PostEditForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,25 +128,23 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         return super().get(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
+        form = PostWriteForm(request.POST)
         current_user = self.request.user
-        oldPost = Post.objects.get(pk = self.kwargs["pk"])
-        if oldPost.author != current_user:
-            return redirect('/')
-        category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
-        title = request.POST.get('title')
-        content = request.POST.get('post-content')
-        upload_file = request.POST.get('upload_file')
-        
-        oldPost.title = title
-        oldPost.content = content
-        oldPost.upload_file = upload_file
-        oldPost.category = category
-        oldPost.save()
-
-        return redirect(oldPost.get_absolute_url())
+        if form.is_valid():
+            post = form.save(commit=False)
+            image = extract_image(post.content)
+            post.author = current_user
+            post.category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
+            post.image = image
+            post.save()
+            return redirect(post.get_absolute_url())
+        return super().post(request, *args, **kwargs)
     
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
+    '''
+    블로그 게시글 삭제 View
+    '''
     login_url = '/accounts/login/'
     model = Post
     success_url = '/blog'
@@ -161,36 +158,49 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     
 
 class CommentAddView(LoginRequiredMixin, CreateView):
+    '''
+    블로그 게시글 -> 댓글 추가 View
+    '''
     login_url = '/accounts/login'
     model = Comment
-    form_class = CommentAddForm
+    form_class = CommentWriteForm
+    template_name = 'blog/post_detail.html'
 
     def post(self, request: HttpRequest, *args, **kwargs):
-        post = Post.objects.get(pk=self.kwargs.get('post_pk'))
-        form = CommentAddForm(request.POST)
+        post = Post.objects.get(pk=self.request.POST['post_pk'])
+        form = CommentWriteForm(request.POST)
         if form.is_valid():
             user = request.user
             comment = form.save(commit=False)
             comment.author = user
             comment.post = post
             comment.save()
-        else:
-            comment_list = []
-            for comment in Comment.objects.filter(post=post):
-                recomments = Recomment.objects.filter(comment=comment)
-                comment_list.append({
-                    'comment': comment,
-                    'recomments': recomments,
-            })
-            context = {
-                'notice': '댓글이 입력되지 않았습니다.',
-                'post': post,
-                'comment_list': comment_list,
-            }
-            return render(request, 'blog/post_detail.html', context)
-        return redirect(comment.post.get_absolute_url())
+            return redirect(comment.post.get_absolute_url())
+            
+        return super().post(request, *args, **kwargs)
     
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        post = Post.objects.get(pk=self.request.POST['post_pk'])
+        context['post'] = post
+        comment_list = []
+        for comment in Comment.objects.filter(post=post):
+            recomments = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment': comment,
+                'recomments': recomments,
+        })
+        context['comment_list'] = comment_list
+        return context
+
+
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    '''
+    블로그 게시글 삭제 View
+    '''
     login_url = '/accounts/login'
     
     def post(self, request: HttpRequest, *args, **kwargs):
@@ -213,38 +223,44 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
     
 
 class CommentEditView(LoginRequiredMixin, UpdateView):
+    '''
+    블로그 게시글 수정 View
+    '''
+    login_url = '/accounts/login/'
     model = Comment
     form_class = CommentEditForm
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        form = CommentEditForm(request.POST)
-        post = Post.objects.get(pk=request.POST.get('post_pk'))
-        if form.is_valid():
-            super().post(request, *args, **kwargs)
-        else:
-            comment_list = []
-            for comment in Comment.objects.filter(post=post):
-                recomments = Recomment.objects.filter(comment=comment)
-                comment_list.append({
-                    'comment': comment,
-                    'recomments': recomments,
-            })
-            context = {
-                'notice': '댓글이 입력되지 않았습니다.',
-                'post': post,
-                'comment_list': comment_list,
-            }
-            return render(request, 'blog/post_detail.html', context)
-        return redirect(post.get_absolute_url())
+    template_name = 'blog/post_detail.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        post = Post.objects.get(pk=self.request.POST['post_pk'])
+        context['post'] = post
+        comment_list = []
+        for comment in Comment.objects.filter(post=post):
+            recomments = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment': comment,
+                'recomments': recomments,
+        })
+        context['comment_list'] = comment_list
+        return context
     
 
 class RecommentAddView(LoginRequiredMixin, CreateView):
+    '''
+    블로그 게시글 대댓글 작성 View
+    '''
     login_url = '/accounts/login'
     model = Recomment
-    form_class = RecommentAddForm
+    form_class = RecommentWriteForm
+    template_name = 'blog/post_detail.html'
 
     def post(self, request: HttpRequest, *args, **kwargs):
-        post = Post.objects.get(pk=request.POST.get('post_pk'))
-        form = RecommentAddForm(request.POST)
+        post = Post.objects.get(pk=self.request.POST['post_pk'])
+        form = RecommentWriteForm(request.POST)
         if form.is_valid():
             user = request.user
             comment = Comment.objects.get(pk=request.POST.get('comment_pk'))
@@ -252,24 +268,31 @@ class RecommentAddView(LoginRequiredMixin, CreateView):
             recomment.author = user
             recomment.comment = comment
             recomment.save()
-        else:
-            comment_list = []
-            for comment in Comment.objects.filter(post=post):
-                recomments = Recomment.objects.filter(comment=comment)
-                comment_list.append({
-                    'comment': comment,
-                    'recomments': recomments,
+            return redirect(comment.post.get_absolute_url())
+        return super().post(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        post = Post.objects.get(pk=self.request.POST['post_pk'])
+        context['post'] = post
+        comment_list = []
+        for comment in Comment.objects.filter(post=post):
+            recomment = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment':comment,
+                'recomments':recomment,
             })
-            context = {
-                're_notice': '답글이 입력되지 않았습니다.',
-                'post': post,
-                'comment_list': comment_list,
-            }
-            return render(request, 'blog/post_detail.html', context)
-        return redirect(comment.post.get_absolute_url())
+        context['comment_list'] = comment_list
+        return context
     
 
 class RecommentDeleteView(LoginRequiredMixin, DeleteView):
+    '''
+    블로그 대댓글 삭제 View
+    '''
     login_url = '/accounts/login'
     model = Recomment
 
@@ -293,33 +316,35 @@ class RecommentDeleteView(LoginRequiredMixin, DeleteView):
     
 
 class RecommentEditView(LoginRequiredMixin, UpdateView):
+    '''
+    블로그 대댓글 수정 View
+    '''
+    login_url = '/accounts/login'
     model = Recomment
     form_class = RecommentEditForm
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        form = RecommentEditForm(request.POST)
-        post = Post.objects.get(pk=request.POST.get('post_pk'))
-        if form.is_valid():
-            super().post(request, *args, **kwargs)
-        else:
-            comment_list = []
-            for comment in Comment.objects.filter(post=post):
-                recomments = Recomment.objects.filter(comment=comment)
-                comment_list.append({
-                    'comment': comment,
-                    'recomments': recomments,
+    template_name = 'blog/post_detail.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        '''
+        context 반환 시 post의 댓글 & 대댓글을  context에 추가
+        '''
+        context = super().get_context_data(**kwargs)
+        post = Post.objects.get(pk=self.request.POST['post_pk'])
+        context['post'] = post
+        comment_list = []
+        for comment in Comment.objects.filter(post=post):
+            recomment = Recomment.objects.filter(comment=comment)
+            comment_list.append({
+                'comment':comment,
+                'recomments':recomment,
             })
-            context = {
-                're_notice': '답글이 입력되지 않았습니다.',
-                'post': post,
-                'comment_list': comment_list,
-            }
-            return render(request, 'blog/post_detail.html', context)
-        return redirect(post.get_absolute_url())
+        context['comment_list'] = comment_list
+        return context
 
 
 class OtherPostListView(ListView):
     '''
-    다른 사람의 블로그 View
+    다른 사람의 블로그 목록 View
     '''
     model = Post
     ordering = '-updated_at'
@@ -367,7 +392,5 @@ other_postlist = OtherPostListView.as_view()
 
 def extract_image(content):
     image_list = re.findall('<img src=".+">', content)
-    for image in image_list:
-        print(image)
-        image_name = image.split('src=')[-1][:-1]
-        print(image_name)
+    if image_list:
+        return image_list[0][10:-2]

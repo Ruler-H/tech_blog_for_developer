@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+import re
 
 from .models import Board_Post, Board_Comment, Board_Recomment
 from .forms import BoardWriteForm, BoardEditForm, CommentWriteForm, CommentEditForm, RecommentWriteForm, RecommentEditForm
@@ -69,6 +70,7 @@ class BoardWriteView(LoginRequiredMixin, CreateView):
         if form.is_valid():
             board_post = form.save(commit=False)
             board_post.author = request.user
+            board_post.image = extract_image(board_post.content)
             board_post.save()
             return redirect(board_post.get_absolute_url())
         return super().post(request, *args, **kwargs)
@@ -84,6 +86,9 @@ class BoardEditView(LoginRequiredMixin, UpdateView):
         board_post = form.save(commit=False)
         if form.is_valid():
             board_post.author = request.user
+            image = extract_image(board_post.content)
+            if image:
+                board_post.image = image
             board_post.save()
             return redirect(board_post.get_absolute_url())
         return super().post(request, *args, **kwargs)
@@ -195,6 +200,7 @@ class RecommentWriteView(LoginRequiredMixin, CreateView):
     게시글 대댓글 작성 View
     [x] 대댓글 작성 구현 필요
     '''
+    login_url = '/accounts/login'
     model = Board_Recomment
     form_class = RecommentWriteForm
     template_name = 'board/board_post_detail.html'
@@ -231,6 +237,7 @@ class RecommentEditView(LoginRequiredMixin, UpdateView):
     '''
     게시판 대댓글 수정 View
     '''
+    login_url = '/accounts/login'
     model = Board_Recomment
     form_class = RecommentEditForm
     template_name = 'board/board_post_detail.html'
@@ -280,3 +287,7 @@ comment_delete = CommentDeleteView.as_view()
 recomment_write = RecommentWriteView.as_view()
 recomment_edit = RecommentEditView.as_view()
 recomment_delete = RecommentDeleteView.as_view()
+
+def extract_image(content):
+    image_list = re.findall('<img src=".+">', content)
+    return image_list[0][10:-2]

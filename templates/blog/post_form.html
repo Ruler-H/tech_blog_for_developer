@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load static %} 
+{% extends 'blog/blog_base.html' %} {% load static %} 
 {% block content %}
 <div class="page-header">
     <nav class="breadcrumb-one" aria-label="breadcrumb">
@@ -20,7 +20,16 @@
 
                     <div id="mailbox-inbox" class="accordion mailbox-inbox">
                         <!-- My Blog 게시글 리스트 BEGIN -->
-
+                        {% if form.errors %}
+                            <div class="alert alert-light-danger border-0 mb-4" role="alert"> 
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close" data-dismiss="alert"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                </button> 
+                                {% for field in form %}
+                                <strong>{{ field.errors }}</strong>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <div class="modal-content" style="height: 100%;">
                             <div class="modal-body" style="height: 43.5rem">
                                 <div class="compose-box">
@@ -34,11 +43,11 @@
                                                         <div class="col-md-11">
                                                             <select class="m-0" id="" placeholder="카테고리를 선택하세요." name="category">
                                                                 {% for category in categories %}
-                                                                {% if category == post.catery %}
-                                                                <option value="{{ category }}" selected>{{ category }}</option>
-                                                                {% else %}
-                                                                <option value="{{ category }}">{{ category }}</option>
-                                                                {% endif %}
+                                                                    {% if category == post.category %}
+                                                                        <option value="{{ category }}" selected>{{ category }}</option>
+                                                                    {% else %}
+                                                                        <option value="{{ category }}">{{ category }}</option>
+                                                                    {% endif %}
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
@@ -65,7 +74,7 @@
                                                                 <line x1="3" y1="18" x2="21" y2="18"></line>
                                                             </svg>
                                                             {% if post %}
-                                                            <input type="text" class="form-control input-search border-0" placeholder="{{ post.title }}" name="title"/>
+                                                            <input type="text" class="form-control input-search border-0" value="{{ post.title }}" name="title"/>
                                                             {% else %}
                                                             <input type="text" class="form-control input-search border-0" placeholder="제목을 입력하세요." name="title"/>
                                                             {% endif %}
@@ -73,7 +82,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <textarea name="post-content" id="post-content" style="display:none;"></textarea>
+                                            <textarea name="content" id="post-content" style="display:none;"></textarea>
                                             <div id="editor-container" class="ql-container ql-snow" style="height: 30rem;"></div>
                                             <div class="d-flex border-top border-light-subtle justify-content-between mt-4">
                                                 <div class="d-flex">
@@ -106,19 +115,16 @@
             ],
         },
         placeholder: "내용을 입력하세요.",
-        theme: "snow", // or 'bubble',
+        theme: "snow", 
     });
 
     document.querySelector('.postform').addEventListener('submit', function() {
         q = document.querySelector("#editor-container > .ql-editor");
-        console.log(q.innerHTML);
         content = document.querySelector("#post-content");
-        console.log(content);
         content.value = q.innerHTML;
     });
 
     {% if post %}
-    console.log('in');
     qu = document.querySelector("#editor-container > .ql-editor");
     qu.innerHTML = '{{ post.content|safe }}';
     {% endif %}

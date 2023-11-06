@@ -74,7 +74,6 @@
             <div class="nav-logo align-self-center">
                 <a class="navbar-brand" href="{% url 'index' %}"><img alt="logo" src="{% static 'assets/img/favicon-96x96.png' %}"> <span class="navbar-brand-name">Tech_Blog</span></a>
             </div>
-
             <ul class="navbar-item topbar-navigation">
                 
                 <!--  BEGIN TOPBAR  -->
@@ -126,8 +125,6 @@
                 <!--  END TOPBAR  -->
 
             </ul>
-            
-            
             {% if user.is_authenticated %}
             <ul class="navbar-item flex-row ml-auto">
                 <li class="nav-item align-self-center search-animated">
@@ -184,8 +181,6 @@
             </ul>
             {% endif %}
             {% endblock %}
-            
-            
         </header>
     </div>
     <!--  END NAVBAR  -->
