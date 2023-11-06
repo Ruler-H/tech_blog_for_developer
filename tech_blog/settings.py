@@ -27,7 +27,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECRET_KEY = 'django-insecure-otd(j$z0%rr8o$sde85+%*q_d$ma%ubjfz2%)5m%pz%dzr#mf0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '*'
