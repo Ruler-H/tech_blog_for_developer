@@ -1,4 +1,4 @@
-# 개발자 기술 블로그 최적화 Blog 서비스
+# <img src="./static/assets/img/favicon-32x32.png" width="4%"> 개발자 기술 블로그 최적화 Blog 서비스
 ## 목차
 [1. 목표와 기능](#1-목표와-기능)  
 [2. 개발 기술 및 환경, 배포 URL](#2-개발-기술-및-환경-배포-url)  
@@ -63,26 +63,164 @@
 </div>
 
 ### 2-3. 배포 URL
-#### [배포 URL 추가 필요]
+#### [Tech_Blog_For_Developer](http://3.38.12.42:8000/)
 
 ## 3. 프로젝트 구조와 개발 일정
 ### 3-1. 프로젝트 Directory 구조
-#### [추후 추가 필요]  
+📦tech_blog_for_developer  
+ ┣ 📂accounts  
+ ┃ ┣ 📂migrations  
+ ┃ ┣ 📂__pycache__  
+ ┃ ┣ 📜admin.py  
+ ┃ ┣ 📜apps.py  
+ ┃ ┣ 📜forms.py  
+ ┃ ┣ 📜models.py  
+ ┃ ┣ 📜tests.py  
+ ┃ ┣ 📜urls.py  
+ ┃ ┣ 📜views.py  
+ ┃ ┗ 📜__init__.py  
+ ┣ 📂blog  
+ ┃ ┣ 📂migrations  
+ ┃ ┣ 📂__pycache__  
+ ┃ ┣ 📜admin.py  
+ ┃ ┣ 📜apps.py  
+ ┃ ┣ 📜forms.py  
+ ┃ ┣ 📜models.py  
+ ┃ ┣ 📜tests.py  
+ ┃ ┣ 📜urls.py  
+ ┃ ┣ 📜views.py  
+ ┃ ┗ 📜__init__.py  
+ ┣ 📂board  
+ ┃ ┣ 📂migrations  
+ ┃ ┣ 📂__pycache__  
+ ┃ ┣ 📜admin.py  
+ ┃ ┣ 📜apps.py  
+ ┃ ┣ 📜forms.py  
+ ┃ ┣ 📜models.py  
+ ┃ ┣ 📜tests.py  
+ ┃ ┣ 📜urls.py  
+ ┃ ┣ 📜views.py  
+ ┃ ┗ 📜__init__.py  
+ ┣ 📂main  
+ ┃ ┣ 📂migrations  
+ ┃ ┣ 📂__pycache__  
+ ┃ ┣ 📜admin.py  
+ ┃ ┣ 📜apps.py  
+ ┃ ┣ 📜models.py  
+ ┃ ┣ 📜tests.py  
+ ┃ ┣ 📜urls.py  
+ ┃ ┣ 📜views.py  
+ ┃ ┗ 📜__init__.py  
+ ┣ 📂media  
+ ┃ ┣ 📂accounts  
+ ┃ ┣ 📂blog  
+ ┃ ┗ 📂board  
+ ┣ 📂static  
+ ┃ ┣ 📂assets  
+ ┃ ┃ ┣ 📂css  
+ ┃ ┃ ┃ ┣ 📂apps  
+ ┃ ┃ ┃ ┣ 📂authentication  
+ ┃ ┃ ┃ ┣ 📂components  
+ ┃ ┃ ┃ ┣ 📂dashboard  
+ ┃ ┃ ┃ ┣ 📂elements  
+ ┃ ┃ ┃ ┣ 📂forms  
+ ┃ ┃ ┃ ┣ 📂pages  
+ ┃ ┃ ┃ ┣ 📂tables  
+ ┃ ┃ ┃ ┣ 📂users  
+ ┃ ┃ ┣ 📂images  
+ ┃ ┃ ┃ ┣ 📂mockup_image  
+ ┃ ┃ ┣ 📂img  
+ ┃ ┃ ┗ 📂js  
+ ┃ ┣ 📂bootstrap  
+ ┃ ┃ ┣ 📂css  
+ ┃ ┃ ┗ 📂js  
+ ┃ ┗ 📂plugins  
+ ┣ 📂tech_blog  
+ ┃ ┣ 📂__pycache__  
+ ┃ ┣ 📜.env  
+ ┃ ┣ 📜asgi.py  
+ ┃ ┣ 📜settings.py  
+ ┃ ┣ 📜urls.py  
+ ┃ ┣ 📜wsgi.py  
+ ┃ ┗ 📜__init__.py  
+ ┣ 📂templates  
+ ┃ ┣ 📂accounts  
+ ┃ ┃ ┣ 📜login.html  
+ ┃ ┃ ┣ 📜password_change.html  
+ ┃ ┃ ┣ 📜profile.html  
+ ┃ ┃ ┣ 📜profile_edit.html  
+ ┃ ┃ ┣ 📜signup.html  
+ ┃ ┃ ┗ 📜user_list.html  
+ ┃ ┣ 📂blog  
+ ┃ ┃ ┣ 📜blog_base.html  
+ ┃ ┃ ┣ 📜post_detail.html  
+ ┃ ┃ ┣ 📜post_form.html  
+ ┃ ┃ ┣ 📜post_list.html  
+ ┃ ┃ ┗ 📜post_not_found.html  
+ ┃ ┣ 📂board  
+ ┃ ┃ ┣ 📜board_base.html  
+ ┃ ┃ ┣ 📜board_post_detail.html  
+ ┃ ┃ ┣ 📜board_post_form.html  
+ ┃ ┃ ┗ 📜board_post_list.html  
+ ┃ ┣ 📂main  
+ ┃ ┃ ┗ 📜index.html  
+ ┃ ┣ 📜404.html  
+ ┃ ┗ 📜base.html  
+ ┣ 📜CONVENTION.md  
+ ┣ 📜db.sqlite3  
+ ┣ 📜manage.py  
+ ┣ 📜README.md  
+ ┗ 📜requirements.txt  
 
 ### 3-2. 프로젝트 URL 구조
-|app: main  |views 함수 이름  |html 파일이름   |비고  |
-|:---------:|:--------------:|:------------:|:---:|
-|'/'        |index           |index.html    |     |
+|app: main |views 함수 이름|html 파일이름|
+|:--------|:------------|:---------|
+|'/'       |index         |index.html |
 
-|app: accounts  |views 함수 이름  |html 파일이름   |비고  |
-|:-------------:|:--------------:|:------------:|:---:|
-|'/'            |postlist        |post_list.html|     |
-#### [추후 수정 필요]  
+|app: accounts |views 함수 이름|html 파일이름   |
+|:------------|:------------|:------------|
+|'login/'      |login         |login.html    |
+|'signup/'     |signup        |singup.html   |
+|'logout/'     |logout        |
+|'profile/'    |profile       |profile.html  |
+|'profile/edit/\<int:pk\>/'|profile_edit|profile_edit.html|
+|'profile/password_change/'|password_change|password_change.html|
+|'subscribe/'|subscribe       |user_list.html|
+|'subscribe/manage/\<int:pk\>/'|subscribe_manage|
+
+|app: blog  |views 함수 이름  |html 파일이름   |
+|:-------------|:--------------|:------------|
+|'list/\<int:pk\>/'|postlist|post_list.html|
+|'\<int:pk\>/'|post_detail|post_detail.html|
+|'edit/\<int:pk\>/'|postedit|post_form.html|
+|'write/'|postwrite|post_form.html|
+|'delete/\<int:pk\>/'|postdelete|
+|'search/\<int:pk\>/'|postlist|post_list.html|
+|'comment_add/'|comment_add|
+|'comment_delete/\<int:pk\>/'|comment_delete|
+|'comment_edit/\<int:pk\>/'|comment_edit|
+|'recomment_add/'|recomment_add|
+|'recomment_delete/\<int:pk\>/'|recomment_delete|
+|'recomment_edit/\<int:pk\>/'|recomment_edit|
+|'other/\<int:other_pk\>/'|otehr_postlist|post_list.html|
+
+|app: board  |views 함수 이름  |html 파일이름   |
+|:-------------|:--------------|:------------|
+|''|board_list|board_post_list.html|
+|'\<int:pk\>/'|board_detail|board_post_detail.html|
+|'write/'|board_write|board_post_form.html|
+|'edit/\<int:pk\>/'|board_edit|board_post_form.html|
+|'delete/\<int:pk\>/'|board_delete|
+|'comment/write/'|comment_write|
+|'comment_delete/\<int:pk\>/'|comment_delete|
+|'comment_edit/\<int:pk\>/'|comment_edit|
+|'recomment_write/'|recomment_write|
+|'recomment_delete/\<int:pk\>/'|recomment_delete|
+|'recomment_edit/\<int:pk\>/'|recomment_edit|
+
 
 ### 3-3. 개발 일정
-<img src="./static/assets/images/WBS_예시.png" width="100%">
-
-#### [추후 변경 필요]
+<img src="./static/assets/images/tech_blog_wbs.png" width="100%">
 
 ## 4. 기능 요구사항 목록
 <img src="./static/assets/images/function_demand_list.png" width="100%">
