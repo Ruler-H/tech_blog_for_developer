@@ -12,8 +12,9 @@ class IndexView(ListView):
         
         blog_post_list = Post.objects.all().order_by('-pk')[:8]
         subscription_post_list = []
-        for subscription in request.user.subscriptions.all():
-            subscription_post_list += Post.objects.filter(author = subscription)[:1]
+        if request.user.is_authenticated:
+            for subscription in request.user.subscriptions.all():
+                subscription_post_list += Post.objects.filter(author = subscription)[:1]
         board_post_list = Board_Post.objects.all().order_by('-pk')[:8]
         context = {
             'blog_post_list': blog_post_list,
