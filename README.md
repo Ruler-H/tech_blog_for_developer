@@ -177,7 +177,7 @@
 ### 3-2. 프로젝트 URL 구조
 |app: main |views 함수 이름|html 파일이름|
 |:--------|:------------|:---------|
-|'/'       |index         |index.html |
+|'/' |index         |index.html |
 
 |app: accounts |views 함수 이름|html 파일이름   |
 |:------------|:------------|:------------|
