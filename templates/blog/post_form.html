@@ -34,7 +34,7 @@
                             <div class="modal-body" style="height: 43.5rem">
                                 <div class="compose-box">
                                     <div class="compose-content">
-                                        <form style="height: 100%" enctype="multipart/form-data" class="postform" method="post">
+                                        <form enctype="multipart/form-data" style="height: 100%" class="postform" method="post">
                                             {% csrf_token %}
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -85,9 +85,7 @@
                                             <textarea name="content" id="post-content" style="display:none;"></textarea>
                                             <div id="editor-container" class="ql-container ql-snow" style="height: 30rem;"></div>
                                             <div class="d-flex border-top border-light-subtle justify-content-between mt-4">
-                                                <div class="d-flex">
-                                                    <input type="file" class="form-control-file mt-2" id="mail_File_attachment" multiple="multiple" placeholder="첨부 파일" name="upload_file"/>
-                                                </div>
+                                                <input type="file" name="upload_file" id="id_upload_file" class="form-control-file mt-c" value="{{ post.upload_file }}">
                                                 <button id="btn-save" class="btn float-left mt-2" type="submit">Save</button>
                                             </div>
                                         </form>
@@ -106,7 +104,7 @@
 {% endblock %}
 {% block script %}
 <script>
-    var quill = new Quill("#editor-container", {
+    const quill = new Quill("#editor-container", {
         modules: {
             toolbar: [
                 [{ header: [1, 2, false] }], 
@@ -117,7 +115,6 @@
         placeholder: "내용을 입력하세요.",
         theme: "snow", 
     });
-
     document.querySelector('.postform').addEventListener('submit', function() {
         q = document.querySelector("#editor-container > .ql-editor");
         content = document.querySelector("#post-content");

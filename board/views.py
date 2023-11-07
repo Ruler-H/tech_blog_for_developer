@@ -77,6 +77,7 @@ class BoardWriteView(LoginRequiredMixin, CreateView):
             board_post = form.save(commit=False)
             board_post.author = request.user
             board_post.image = extract_image(board_post.content)
+            board_post.upload_file = request.FILES.get('upload_file')
             board_post.save()
             return redirect(board_post.get_absolute_url())
         return super().post(request, *args, **kwargs)
@@ -92,10 +93,13 @@ class BoardEditView(LoginRequiredMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         form = BoardEditForm(request.POST)
         print(form)
-        board_post = form.save(commit=False)
         if form.is_valid():
+            board_post = Board_Post.objects.get(pk = self.kwargs["pk"])
+            board_post.title = request.POST.get('title')
+            board_post.content = request.POST.get('content')
             board_post.author = request.user
             image = extract_image(board_post.content)
+            board_post.upload_file = request.FILES.get('upload_file')
             if image:
                 board_post.image = image
             board_post.save()

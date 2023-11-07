@@ -97,6 +97,7 @@ class PostWriteView(LoginRequiredMixin, CreateView):
             image = extract_image(post.content)
             post.author = current_user
             post.category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
+            post.upload_file = request.FILES.get('upload_file')
             post.image = image
             post.save()
             return redirect(post.get_absolute_url())
@@ -131,10 +132,13 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         form = PostWriteForm(request.POST)
         current_user = self.request.user
         if form.is_valid():
-            post = form.save(commit=False)
+            post = Post.objects.get(pk = self.kwargs["pk"])
+            post.title = request.POST.get('title')
+            post.content = request.POST.get('content')
             image = extract_image(post.content)
             post.author = current_user
             post.category = Category.objects.get(Q(category = request.POST.get('category')) & Q(user = current_user))
+            post.upload_file = request.FILES.get('upload_file')
             post.image = image
             post.save()
             return redirect(post.get_absolute_url())
@@ -158,6 +162,7 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         current_user = self.request.user
         return f'/blog/list/{current_user.pk}/'
+
 
 class CommentAddView(LoginRequiredMixin, CreateView):
     '''
