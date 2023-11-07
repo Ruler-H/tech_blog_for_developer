@@ -147,7 +147,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
     '''
     login_url = '/accounts/login/'
     model = Post
-    success_url = '/blog'
 
     def post(self, request, *args, **kwargs):
         current_user = self.request.user
@@ -156,6 +155,9 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
             return redirect('/')
         return super().post(request, *args, **kwargs)
     
+    def get_success_url(self):
+        current_user = self.request.user
+        return f'/blog/list/{current_user.pk}/'
 
 class CommentAddView(LoginRequiredMixin, CreateView):
     '''

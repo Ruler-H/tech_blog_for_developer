@@ -225,12 +225,8 @@
 ## 4. 기능 요구사항 목록
 <img src="./static/assets/images/function_demand_list.png" width="100%">
 
-### [추후 변경 필요]
-
 ## 5. 데이터베이스 모델링(ER Diagram)
 <img src="./static/assets/images/Tech_Blog_ERDiagram.png" width="100%">  
-
-### [차후 DB 모델 변경시 변경 필요]
 
 ## 6. User Interface
 ### [개발 후 작성 필요]
