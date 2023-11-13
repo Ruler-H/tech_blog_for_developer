@@ -11,13 +11,13 @@
     {% for blog_post in blog_post_list %}
         <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
             <a href="{% url 'blog:post_detail' blog_post.pk %}">
-                <div class="card component-card_9 w-100" role="navigation">
+                <div class="card component-card_9" role="navigation">
                     {% if blog_post.image %}
-                        <img src="{{blog_post.image}}" class="card-img-top" alt="widget-card-2">
+                        <img src="{{blog_post.image}}" class="card-img-top" alt="widget-card-2" style="height:24rem;">
                     {% else %}
-                        <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2">
+                        <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2" style="height:24rem;">
                     {% endif %}
-                    <div class="card-body">
+                    <div class="card-body h-25">
                         <p class="meta-date">{{blog_post.created_at|date:"Y년 m월 j일"}}</p>
             
                         <h5 class="card-title">{{blog_post.title}}</h5>
@@ -64,11 +64,11 @@
         {% for subscription_post in subscription_post_list %}
             <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
                 <a href="{% url 'blog:post_detail' subscription_post.pk %}">
-                    <div class="card component-card_9 w-100" role="navigation">
+                    <div class="card component-card_9" role="navigation">
                         {% if subscription_post.image %}
-                            <img src="{{subscription_post.image}}" class="card-img-top" alt="widget-card-2">
+                            <img src="{{subscription_post.image}}" class="card-img-top" alt="widget-card-2" style="height:24rem;">
                         {% else %}
-                            <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2">
+                            <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2" style="height:24rem;">
                         {% endif %}
                         <div class="card-body">
                             <p class="meta-date">{{subscription_post.created_at|date:"Y년 m월 j일"}}</p>
@@ -117,11 +117,11 @@
     {% for board_post in board_post_list %}
         <div class = "col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
             <a href="{% url 'board:board_detail' board_post.pk %}">
-                <div class="card component-card_9 w-100" role="navigation">
+                <div class="card component-card_9" role="navigation">
                     {% if board_post.image %}
-                        <img src="{{board_post.image}}" class="card-img-top" alt="widget-card-2">
+                        <img src="{{board_post.image}}" class="card-img-top" alt="widget-card-2" style="height:24rem;">
                     {% else %}
-                        <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2">
+                        <img src="{% static '/assets/img/ms-icon-310x310.png' %}" class="card-img-top" alt="widget-card-2" style="height:24rem;">
                     {% endif %}
                     <div class="card-body">
                         <p class="meta-date">{{board_post.created_at|date:"Y년 m월 j일"}}</p>
